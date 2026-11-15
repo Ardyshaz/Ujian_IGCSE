@@ -4,7 +4,7 @@ Implementation date:16 November2026. Registered property:kuiz-igcse (564419858),
 
 ## Activation status
 
-The integration is prepared behind analyticsConfig.enabled=false in public/js/analytics-config.js. Do not turn it on or publish collection until the owner confirms Enhanced Measurement is OFF for this stream and privacy QA passes. Google signals should be OFF in the property; the tag also explicitly disables signals and advertising personalization. No live Analytics collection success or GA4 Realtime ingestion is claimed while the switch remains off.
+The owner confirmed Enhanced Measurement OFF on16 November2026. Privacy QA passed and analyticsConfig.enabled=true in public/js/analytics-config.js permits production-host collection only after explicit opt-in. Google signals should also be OFF in the property; its Console setting has not been independently verified. The tag explicitly disables signals and advertising personalization. Deployment and GA4 receipt evidence are recorded separately in the validation log; enabling the switch alone does not prove ingestion.
 
 Console:GA4 Admin > Data streams > igcse-web > Enhanced Measurement OFF. Keep Ads links/personalization and Google signals off. Use the existing property,not a duplicate. Review retention settings and the site's child/guardian privacy requirements before broader use; this implementation is not certification of legal compliance or verified parental identity.
 

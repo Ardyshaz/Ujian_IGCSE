@@ -83,4 +83,4 @@ Express/SQLite, database lama, slip anak, nota calon, sumber PDF Gemini, log dan
 Lesen vendor disertakan bersama jsPDF, Lucide dan Noto Sans. Tiada lesen baharu ditetapkan untuk keseluruhan kod projek melalui pengemasan ini.
 
 
-Analitik pilihan:integrasi GA4 disediakan tetapi kekal dimatikan sehingga tetapan stream disahkan. Tiada SDK Analytics dimuatkan sebelum persetujuan. [Dasar dan status](docs/features/ANALYTICS.md).
+Analitik pilihan:integrasi GA4 diaktifkan untuk domain produksi selepas pemilik mengesahkan Enhanced Measurement OFF. Tiada SDK Analytics dimuatkan sebelum persetujuan penjaga; pengguna boleh menolak atau mematikannya melalui Privasi Analitik. [Dasar dan status](docs/features/ANALYTICS.md).

@@ -56,5 +56,7 @@ Express routes, SQL schema/entities, SQLite migration/backup, server-side score/
 
 - [x] Confirm linked property/Web App Measurement ID G-F9W4PLD4G9; add gated consent UI and allowlisted sanitized events.
 - [x] Five policy unit checks and mocked browser privacy/withdrawal/mobile checks pass; learning works with tracking off.
-- [ ] Owner confirms Enhanced Measurement OFF; Google signals/property privacy settings reviewed.
-- [ ] Enable/deploy only after required stream settings and final privacy verification; verify real transport and separately record Realtime/DebugView receipt.
+- [x] Owner confirms Enhanced Measurement OFF; enable production opt-in after privacy verification and real-SDK intercepted transport checks.
+- [x] Hosting release verified on production at390px: zero Analytics imports before consent,explicit allow loads SDK,decline works,no page errors; collection requests intercepted and synthetic Auth identity deleted.
+- [ ] Confirm actual GA4 Realtime receipt after explicit test opt-in; intercepted transport does not prove ingestion.
+- [ ] Review remaining property settings including Google signals OFF, retention and admin access; client signals/ads are already disabled.
