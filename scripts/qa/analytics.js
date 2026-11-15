@@ -28,11 +28,11 @@ try{
  await page.goto(base);await page.locator('.hero').waitFor();assert.equal(imports,0);
  await page.locator('#support-footer [data-action="analytics-privacy"]').click();
  await page.getByRole('button',{name:'Tolak / Matikan',exact:true}).click();
- await page.getByText('Analitik dimatikan. Kuiz dan rekod anda kekal tersedia.',{exact:true}).waitFor();assert.equal(imports,0);
+ await page.getByText('Analitik dimatikan. Kuiz dan rekod anda kekal tersedia.',{exact:true}).waitFor();assert.equal(imports,0);assert.equal(await page.locator('[data-analytics-current-choice]').textContent(),'Ditolak');
  await page.reload();await page.locator('.hero').waitFor();assert.equal(imports,0);
  await page.locator('#support-footer [data-action="analytics-privacy"]').click();
  await page.getByRole('button',{name:'Izinkan Analitik',exact:true}).click();
- await page.getByText('Analitik pilihan telah diaktifkan.',{exact:true}).waitFor();assert.equal(imports,1);
+ await page.getByText('Analitik pilihan telah diaktifkan.',{exact:true}).waitFor();assert.equal(imports,1);assert.equal(await page.locator('[data-analytics-current-choice]').textContent(),'Diizinkan');
  const calls=await page.evaluate(()=>window.__analyticsCalls),init=calls.find(c=>c.name==='init');
  assert.equal(init.data.config.send_page_view,false);assert.equal(init.data.config.allow_google_signals,false);assert.equal(init.data.config.allow_ad_personalization_signals,false);
  assert.ok(calls.find(c=>c.name==='consent'&&c.data.ad_storage==='denied'&&c.data.ad_user_data==='denied'&&c.data.ad_personalization==='denied'));
