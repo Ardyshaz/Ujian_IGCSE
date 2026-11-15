@@ -1,8 +1,12 @@
-# MRSM - Persediaan Ujian IGCSE
-
-Latihan dan panduan percuma untuk pelajar serta ibu bapa: English, Mathematics dan Science, dengan UI utama Bahasa Melayu.
-
-**Laman live:** https://kuiz-igcse.web.app
+<div align="center">
+  <img src="public/assets/book.svg" width="72" height="72" alt="Ikon buku MRSM IGCSE">
+  <h1>MRSM - Persediaan Ujian IGCSE</h1>
+  <p>Panduan, latihan dan kuiz percuma untuk pelajar serta ibu bapa.</p>
+  <p><strong>English · Mathematics · Science</strong></p>
+  <h2><a href="https://kuiz-igcse.web.app">Buka Aplikasi Live</a></h2>
+  <p><a href="https://kuiz-igcse.web.app"><strong>https://kuiz-igcse.web.app</strong></a></p>
+  <p>100% percuma · UI Bahasa Melayu · Mesra telefon</p>
+</div>
 
 **Repo:** https://github.com/Ardyshaz/Ujian_IGCSE
 
