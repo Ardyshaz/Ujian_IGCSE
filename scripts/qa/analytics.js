@@ -26,6 +26,14 @@ await context.route('**/firebase-analytics.js',route=>{
 const page=await context.newPage();page.setDefaultTimeout(20000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
 try{
  await page.goto(base);await page.locator('.hero').waitFor();assert.equal(imports,0);
+ await page.getByRole('heading',{name:'Izinkan analitik penggunaan?',exact:true}).waitFor();
+ await page.screenshot({path:join(output,'first-visit-popup.png')});
+ await page.getByRole('button',{name:'Nanti',exact:true}).click();assert.equal(imports,0);
+ assert.equal(await page.locator('#dialog').evaluate(el=>el.open),false);
+ await page.reload();await page.getByRole('heading',{name:'Izinkan analitik penggunaan?',exact:true}).waitFor();
+ await page.getByRole('button',{name:'Tolak',exact:true}).click();
+ await page.waitForFunction(()=>!document.querySelector('#dialog').open);assert.equal(imports,0);
+ await page.reload();await page.locator('.hero').waitFor();assert.equal(await page.locator('#dialog').evaluate(el=>el.open),false);
  await page.locator('#support-footer [data-action="analytics-privacy"]').click();
  await page.getByRole('button',{name:'Tolak / Matikan',exact:true}).click();
  await page.getByText('Analitik dimatikan. Kuiz dan rekod anda kekal tersedia.',{exact:true}).waitFor();assert.equal(imports,0);assert.equal(await page.locator('[data-analytics-current-choice]').textContent(),'Ditolak');
@@ -67,5 +75,12 @@ try{
  await page.waitForFunction(()=>window['ga-disable-G-F9W4PLD4G9']===false);
  await second.getByRole('button',{name:'Tolak / Matikan',exact:true}).click();await page.waitForFunction(()=>window['ga-disable-G-F9W4PLD4G9']===true);
  await second.close();assert.deepEqual(errors,[]);
+ // A fresh choice can allow directly from the first-visit popup; saved allow suppresses it on reload.
+ await page.evaluate(()=>localStorage.removeItem('igcse-analytics-consent-v1'));
+ await page.goto(base);await page.getByRole('heading',{name:'Izinkan analitik penggunaan?',exact:true}).waitFor();
+ await page.getByRole('button',{name:'Izinkan Analitik',exact:true}).click();
+ await page.waitForFunction(()=>!document.querySelector('#dialog').open);
+ await page.reload();await page.locator('.hero').waitFor();assert.equal(await page.locator('#dialog').evaluate(el=>el.open),false);
+
  console.log('PASS: default/deny/reload load no Analytics SDK; explicit allow; private-field and URL filtering; ads denied; withdrawal/cookie isolation; shared-tab denial; mobile360/390. Google transport mocked. Evidence: '+output);
 }finally{await context.close();await browser.close();}

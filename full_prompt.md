@@ -1693,3 +1693,8 @@ These are recorded decisions/evidence gaps, not a request to approve each engine
 ## Optional Analytics update - 16 November 2026
 
 The user authorised GA4 integration for the linked kuiz-igcse property. It supersedes earlier blanket no-Analytics instructions only when explicitly enabled and consented. Follow docs/features/ANALYTICS.md from the repository root: default off,no SDK before guardian opt-in,strict event/URL allowlists,no learner IDs/names/scores/answers/comments/filenames,ads/signals disabled and reversible browser choice. Enhanced Measurement OFF confirmation is required before activation. Source implementation and mocked privacy tests do not establish live collection or GA4 ingestion.
+
+
+### First-visit Analytics consent popup (16 November2026)
+
+The owner requests a concise BM popup on the initial page load when the production host is enabled and no valid Analytics choice exists. Show Izinkan analitik penggunaan? after initial route rendering,with equally styled Izinkan Analitik and Tolak actions plus Nanti and normal close/Escape/backdrop dismissal. Keep full privacy disclosure expandable. Save explicit choices for180days and suppress subsequent prompts while valid. Closing/Nanti grants nothing; learning stays usable and a later load may ask again. Preserve zero Analytics imports before explicit allow,footer settings and all private-field filtering. This replaces the earlier no-automatic-modal design only; it does not introduce default consent.

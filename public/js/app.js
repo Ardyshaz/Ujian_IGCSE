@@ -4,7 +4,7 @@ import { studentGuide, parentGuide, about, glossaryRows } from './guides.js';
 import { showSupport, reserveFooterSpace } from './support.js';
 import { homeGuide } from './home-guide.js';
 import { showFeedback } from './feedback.js';
-import {initOptionalAnalytics,trackUsage,showAnalyticsPrivacy,analyticsChoiceMarkup} from './analytics.js';
+import {initOptionalAnalytics,trackUsage,showAnalyticsPrivacy,analyticsChoiceMarkup,promptOptionalAnalytics} from './analytics.js';
 
 const navigation = [['home','house','Laman Utama'],['quiz','play','Mula Kuiz'],['bank','layers','Bank Soalan'],['progress','chart-no-axes-column-increasing','Prestasi Saya'],['student','book-open','Panduan Pelajar'],['parent','users','Panduan Ibu Bapa'],['about','info','Tentang Projek']];
 const modes = [['practice','sprout','Belajar dengan feedback serta-merta.'],['examination','clock','Latihan fokus dengan pemasa.'],['challenge','zap','Cabar kefahaman anda.'],['daily','target','Lapan soalan, sedikit setiap hari.']];
@@ -304,4 +304,4 @@ initOptionalAnalytics();
 window.addEventListener('analytics-choice-changed',()=>document.querySelector('.analytics-choice')?.remove());
 window.addEventListener('hashchange',()=>{index=0;renderRoute();});
 window.addEventListener('beforeunload',event=>{if(pendingSaves.size){event.preventDefault();event.returnValue='';}});
-bootstrap().then(renderRoute).catch(error=>{app.innerHTML=`<main class="content error-page"><h1>Ruang pembelajaran belum dapat dihubungkan.</h1><p>${h(error.message)}</p><p>Semak config Firebase dan sambungan Internet, kemudian muat semula.</p><button class="button" id="reconnect">Muat semula</button></main>`;document.querySelector('#reconnect').addEventListener('click',()=>location.reload());});
+bootstrap().then(async()=>{await renderRoute();promptOptionalAnalytics();}).catch(error=>{app.innerHTML=`<main class="content error-page"><h1>Ruang pembelajaran belum dapat dihubungkan.</h1><p>${h(error.message)}</p><p>Semak config Firebase dan sambungan Internet, kemudian muat semula.</p><button class="button" id="reconnect">Muat semula</button></main>`;document.querySelector('#reconnect').addEventListener('click',()=>location.reload());});

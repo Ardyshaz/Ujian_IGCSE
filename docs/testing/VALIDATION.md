@@ -113,3 +113,6 @@ Deployed live browser check at390x844 passed: correct page identity,meaningful h
 
 
 Consent status follow-up:fixed the modal current-choice label remaining Belum dipilih after a successful allow/deny. Existing mocked Analytics browser suite passed with explicit Diizinkan/Ditolak label assertions; consent policy remains opt-in. An initial new assertion was misplaced before opening the modal and timed out; corrected the test interaction order and reran successfully.
+
+
+First-visit popup follow-up:existing mocked Analytics browser suite passed the automatic initial popup,zero pre-consent imports,Nanti dismissal with no consent,re-prompt after reload when undecided,Tolak save/no re-prompt,allow directly from popup and no re-prompt after saved allow. Existing filtering,withdrawal and cross-tab checks also passed.17 unit checks passed. The first added final reload assertion initially retained the synthetic session route,so the home-hero assertion timed out; reset the test route and reran successfully.390px first-visit screenshot reviewed in OS temp igcse-analytics-0Utluc/first-visit-popup.png. This is browser emulation with mocked Analytics,not GA4 ingestion or physical Android evidence.

@@ -56,12 +56,12 @@ async function choose(status){
   catch{state=null;disable();throw new Error('Pilihan tidak dapat disimpan. Analitik kekal dimatikan.');}
   if(status==='denied')disable();else await start();notify();
 }
-export function showAnalyticsPrivacy(){
+export function showAnalyticsPrivacy({firstVisit=false}={}){
   const status=state==='granted'?'Diizinkan':state==='denied'?'Ditolak':'Belum dipilih';
-  const modal=dialog(`${dialogHeader('Privasi Analitik')}<p>Untuk ibu bapa atau penjaga: analitik pilihan membantu kami memahami halaman dan ciri yang digunakan. Aplikasi tetap boleh digunakan jika anda menolak.</p><p>Selepas diizinkan, Google Analytics boleh memproses pengecam pelayar (cookies), alamat IP dan maklumat peranti. Nama pelajar, ID profil atau cubaan, markah, jawapan, komen dan nama fail laporan tidak dihantar oleh aplikasi.</p><p>Tiada personalisasi iklan atau Google signals. Pilihan boleh diubah di sini pada bila-bila masa. Jika anda pelajar, minta penjaga membuat pilihan ini.</p><p class="small muted">Pilihan semasa: <strong data-analytics-current-choice>${status}</strong>.${allowed()?'':' Analitik belum diaktifkan untuk laman ini.'}</p><p id="analytics-privacy-status" role="status" aria-live="polite" class="small muted"></p><div class="form-actions"><button type="button" class="button secondary" data-analytics-choice="granted" ${allowed()?'':'disabled'}>Izinkan Analitik</button><button type="button" class="button secondary" data-analytics-choice="denied">Tolak / Matikan</button><button type="button" class="button ghost" data-close>Tutup</button></div>`);
+  const modal=dialog(`${dialogHeader(firstVisit?'Izinkan analitik penggunaan?':'Privasi Analitik')}${firstVisit?'<p>Bantu kami menambah baik aplikasi melalui analitik penggunaan. Pilihan ini untuk ibu bapa atau penjaga; kuiz tetap boleh digunakan jika anda menolak.</p><details><summary>Butiran privasi</summary>':''}<p>Untuk ibu bapa atau penjaga: analitik pilihan membantu kami memahami halaman dan ciri yang digunakan. Aplikasi tetap boleh digunakan jika anda menolak.</p><p>Selepas diizinkan, Google Analytics boleh memproses pengecam pelayar (cookies), alamat IP dan maklumat peranti. Nama pelajar, ID profil atau cubaan, markah, jawapan, komen dan nama fail laporan tidak dihantar oleh aplikasi.</p><p>Tiada personalisasi iklan atau Google signals. Pilihan boleh diubah di sini pada bila-bila masa. Jika anda pelajar, minta penjaga membuat pilihan ini.</p>${firstVisit?'</details>':''}<p class="small muted">Pilihan semasa: <strong data-analytics-current-choice>${status}</strong>.${allowed()?'':' Analitik belum diaktifkan untuk laman ini.'}</p><p id="analytics-privacy-status" role="status" aria-live="polite" class="small muted"></p><div class="form-actions"><button type="button" class="button secondary" data-analytics-choice="granted" ${allowed()?'':'disabled'}>Izinkan Analitik</button><button type="button" class="button secondary" data-analytics-choice="denied">${firstVisit?'Tolak':'Tolak / Matikan'}</button><button type="button" class="button ghost" data-close>${firstVisit?'Nanti':'Tutup'}</button></div>`);
   modal.querySelectorAll('[data-analytics-choice]').forEach(button=>button.addEventListener('click',async()=>{
     const buttons=modal.querySelectorAll('[data-analytics-choice]'),message=modal.querySelector('#analytics-privacy-status');buttons.forEach(b=>b.disabled=b.dataset.analyticsChoice==='granted');message.textContent='Menyimpan pilihan…';
-    try{await choose(button.dataset.analyticsChoice);message.textContent=state==='denied'?'Analitik dimatikan. Kuiz dan rekod anda kekal tersedia.':running?'Analitik pilihan telah diaktifkan.':'Pilihan disimpan. Analitik belum dapat disambungkan; kuiz tetap boleh digunakan.';}
+    try{await choose(button.dataset.analyticsChoice);message.textContent=state==='denied'?'Analitik dimatikan. Kuiz dan rekod anda kekal tersedia.':running?'Analitik pilihan telah diaktifkan.':'Pilihan disimpan. Analitik belum dapat disambungkan; kuiz tetap boleh digunakan.';if(firstVisit&&state!==null)modal.close();}
     catch(error){message.textContent=error.message;}
     finally{modal.querySelector('[data-analytics-current-choice]').textContent=state==='granted'?'Diizinkan':state==='denied'?'Ditolak':'Belum dipilih';buttons.forEach(b=>b.disabled=b.dataset.analyticsChoice==='granted'&&!allowed());}
   }));
@@ -73,4 +73,8 @@ export function initOptionalAnalytics(){
     if(event.key!==CONSENT_KEY&&event.key!==null)return;state=loadChoice();
     if(state==='granted'&&allowed())void start();else disable();notify();
   });
+}
+
+export function promptOptionalAnalytics(){
+  if(allowed()&&state===null&&!document.querySelector('#dialog').open)showAnalyticsPrivacy({firstVisit:true});
 }

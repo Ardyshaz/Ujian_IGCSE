@@ -62,3 +62,5 @@ Express routes, SQL schema/entities, SQLite migration/backup, server-side score/
 - [ ] Review remaining property settings including Google signals OFF, retention and admin access; client signals/ads are already disabled.
 
 - [x] Fix stale Analytics modal choice label after allow/deny; verify both labels in existing browser QA.
+
+- [x] Add requested first-visit Analytics popup with allow/decline/Nanti,expandable disclosure and saved-choice suppression; keep tracking off before explicit allow.
