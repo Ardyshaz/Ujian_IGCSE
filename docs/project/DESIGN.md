@@ -13,3 +13,8 @@ The permanent footer contains support and private-feedback actions plus the exac
 Profile export:primary Eksport Laporan (PDF), secondary Salinan Data (JSON), clearly spaced destructive deletion. PDF reports use A4, navy/gold hierarchy, embedded Noto Sans, summary cards, subject bars, trend, complete multi-page tables and privacy/page-number footers. Preserve multilingual profile names via local rendering fallback where needed. [Report specification](../features/REPORT_EXPORT.md).
 
 [Concept reference](../design/concept-prompt.md) is historical visual provenance, not current copy. Exact text and full acceptance requirements are in [full_prompt.md](../../full_prompt.md).
+
+
+## Optional Analytics update - 16 November 2026
+
+The user authorised GA4 integration for the linked kuiz-igcse property. It supersedes earlier blanket no-Analytics instructions only when explicitly enabled and consented. Follow docs/features/ANALYTICS.md from the repository root: default off,no SDK before guardian opt-in,strict event/URL allowlists,no learner IDs/names/scores/answers/comments/filenames,ads/signals disabled and reversible browser choice. Enhanced Measurement OFF confirmation is required before activation. Source implementation and mocked privacy tests do not establish live collection or GA4 ingestion.

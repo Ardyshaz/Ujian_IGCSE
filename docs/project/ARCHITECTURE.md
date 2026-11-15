@@ -12,3 +12,8 @@ The browser loads the SPA entirely from public. Firebase modular Web SDK13.3.0 s
 [System modules](../architecture/SYSTEM_ARCHITECTURE.md), [schema](../architecture/DATABASE_SCHEMA.md), [service contract](../architecture/API_REFERENCE.md), [acceptance contract](../architecture/IMPLEMENTATION_CONTRACT.md), [privacy](../operations/PRIVACY_AND_SECURITY.md).
 
 The original full specification remains authoritative in [full_prompt.md](../../full_prompt.md). Old SQL/server requirements are superseded by the explicit Firebase pivot; private legacy code is not part of this repository's active runtime.
+
+
+## Optional Analytics update - 16 November 2026
+
+The user authorised GA4 integration for the linked kuiz-igcse property. It supersedes earlier blanket no-Analytics instructions only when explicitly enabled and consented. Follow docs/features/ANALYTICS.md from the repository root: default off,no SDK before guardian opt-in,strict event/URL allowlists,no learner IDs/names/scores/answers/comments/filenames,ads/signals disabled and reversible browser choice. Enhanced Measurement OFF confirmation is required before activation. Source implementation and mocked privacy tests do not establish live collection or GA4 ingestion.

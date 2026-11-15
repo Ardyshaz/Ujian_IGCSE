@@ -1688,3 +1688,8 @@ Future private pilot requires implemented authentication/consent/access, reviewe
 | C-09 | Are offline operation/PWA, cloud sync, pronunciation and glossary favourites required in the first release? | Offline/sync are not yet promised; pronunciation/favourites remain optional enhancements. Core searchable bilingual glossary remains required. |
 
 These are recorded decisions/evidence gaps, not a request to approve each engineering phase. The consolidation itself did not authorise implementation; the subsequent explicit user request now authorises local research/build work. Public deployment remains gated.
+
+
+## Optional Analytics update - 16 November 2026
+
+The user authorised GA4 integration for the linked kuiz-igcse property. It supersedes earlier blanket no-Analytics instructions only when explicitly enabled and consented. Follow docs/features/ANALYTICS.md from the repository root: default off,no SDK before guardian opt-in,strict event/URL allowlists,no learner IDs/names/scores/answers/comments/filenames,ads/signals disabled and reversible browser choice. Enhanced Measurement OFF confirmation is required before activation. Source implementation and mocked privacy tests do not establish live collection or GA4 ingestion.

@@ -9,3 +9,8 @@ The runtime is a static Firebase SPA. Completed records belong in owner-scoped F
 Use meaningful unit/rules/browser/PDF checks as relevant; do not infer live success from configuration alone. Keep tests disposable and synthetic. Existing user authorization persists; publishing a repository and deploying Hosting are distinct operations. Do not commit private .local files, generated family reports or credentials. Read the operations/privacy documentation before touching real records.
 
 Historical companion requirements were consolidated into full_prompt.md. Pre-cleanup copies remain locally archived; this supporting view does not reduce that specification.
+
+
+## Optional Analytics update - 16 November 2026
+
+The user authorised GA4 integration for the linked kuiz-igcse property. It supersedes earlier blanket no-Analytics instructions only when explicitly enabled and consented. Follow docs/features/ANALYTICS.md from the repository root: default off,no SDK before guardian opt-in,strict event/URL allowlists,no learner IDs/names/scores/answers/comments/filenames,ads/signals disabled and reversible browser choice. Enhanced Measurement OFF confirmation is required before activation. Source implementation and mocked privacy tests do not establish live collection or GA4 ingestion.

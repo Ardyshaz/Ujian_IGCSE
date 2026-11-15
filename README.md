@@ -81,3 +81,6 @@ Hosting:folder `public/`; Firestore rules/indexes di root. [Panduan deployment](
 Express/SQLite, database lama, slip anak, nota calon, sumber PDF Gemini, log dan hasil QA kekal secara tempatan dalam `.local/`. Prompt asal/prototaip awam diarkibkan tanpa perubahan; kandungan penuh projek kekal dalam full_prompt.md. Lihat [peta pengemasan](docs/operations/REPOSITORY_LAYOUT.md).
 
 Lesen vendor disertakan bersama jsPDF, Lucide dan Noto Sans. Tiada lesen baharu ditetapkan untuk keseluruhan kod projek melalui pengemasan ini.
+
+
+Analitik pilihan:integrasi GA4 disediakan tetapi kekal dimatikan sehingga tetapan stream disahkan. Tiada SDK Analytics dimuatkan sebelum persetujuan. [Dasar dan status](docs/features/ANALYTICS.md).

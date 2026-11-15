@@ -24,7 +24,7 @@ async function initialise() {
   await authSDK.setPersistence(auth, authSDK.browserLocalPersistence);
   await auth.authStateReady();
   const user = auth.currentUser || (await authSDK.signInAnonymously(auth)).user;
-  return {db, ownerId:user.uid, sdk:dbSDK};
+  return {app, db, ownerId:user.uid, sdk:dbSDK};
 }
 export function firebaseMessage(error) {
   if (error.code === 'auth/configuration-not-found') return 'Firebase Authentication belum disediakan. Buka Firebase Console → Authentication → Get started, kemudian aktifkan Anonymous di Sign-in method.';

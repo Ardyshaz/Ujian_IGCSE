@@ -4,6 +4,7 @@ import { studentGuide, parentGuide, about, glossaryRows } from './guides.js';
 import { showSupport, reserveFooterSpace } from './support.js';
 import { homeGuide } from './home-guide.js';
 import { showFeedback } from './feedback.js';
+import {initOptionalAnalytics,trackUsage,showAnalyticsPrivacy,analyticsChoiceMarkup} from './analytics.js';
 
 const navigation = [['home','house','Laman Utama'],['quiz','play','Mula Kuiz'],['bank','layers','Bank Soalan'],['progress','chart-no-axes-column-increasing','Prestasi Saya'],['student','book-open','Panduan Pelajar'],['parent','users','Panduan Ibu Bapa'],['about','info','Tentang Projek']];
 const modes = [['practice','sprout','Belajar dengan feedback serta-merta.'],['examination','clock','Latihan fokus dengan pemasa.'],['challenge','zap','Cabar kefahaman anda.'],['daily','target','Lapan soalan, sedikit setiap hari.']];
@@ -18,6 +19,7 @@ let setupVersion = 0, bankVersion = 0;
 let pendingStart;
 let submissionPromise = null;
 let resultFilter = 'all';
+const completedUsageIds=new Set();
 
 function activeId() { try { return localStorage.getItem('igcse-active-profile'); } catch { return null; } }
 function remember(id) { try { localStorage.setItem('igcse-active-profile',id); } catch { /* profile selection is optional convenience */ } }
@@ -55,6 +57,7 @@ async function renderRoute() {
     else if(route==='result' && id){currentResult=await api(`/attempts/${id}`);resultFilter='all';main().innerHTML=resultScreen();}
     else main().innerHTML=`<h1>Mari kembali ke laman utama.</h1><p>Halaman ini tidak ditemui.</p><a class="button" href="#home">Ke Laman Utama</a>`;
     icons();
+    trackUsage('page_view');
     if(route==='student'&&id==='glossary')document.querySelector('.glossary')?.scrollIntoView({block:'start'});
   } catch(error) { main().innerHTML=`<section class="panel error-page"><h1>Halaman ini belum dapat dibuka.</h1><p>${h(error.message)}</p><button class="button" data-action="reload">Cuba semula</button><a class="button secondary" href="#home">Ke Laman Utama</a></section>`;icons(); }
 }
@@ -62,6 +65,7 @@ function subjectRows(){return boot.subjects.map(s=>`<button class="subject-row" 
 function home() {
   return `${boot.cloudError?`<div class="alert warning" role="status">${h(boot.cloudError)}</div>`:''}<h1>Persediaan ke MRSM IGCSE bermula di sini.</h1><p class="subtitle">${learner?`Selamat kembali, ${h(learner.display_name)}. `:''}Bina keyakinan anak anda, satu soalan pada satu masa.</p>
   <section class="hero"><div><h2>Pilih Subjek Anda</h2><p>Pilih subjek di bawah untuk mula buat latihan dan ulang kaji.</p></div><button class="button" data-action="start">Mula Ulang Kaji ${icon('arrow-right')}</button></section>
+  ${analyticsChoiceMarkup()}
   ${homeGuide()}
   ${stats?.active.length?`<div class="alert"><strong>Ada kuiz yang belum selesai.</strong> Jawapan yang disimpan masih tersedia. <a href="#session/${stats.active[0].id}">Sambung ${h(title(stats.active[0].mode))}</a></div>`:''}
   <div class="learning-grid"><section><div class="section-header"><h2>Latih Tubi Subjek</h2></div><div class="subject-list">${subjectRows()}</div></section><section class="panel daily"><div><h2 class="icon-heading">${icon('target')}Cabaran Harian (Daily Challenge)</h2><p>8 soalan campuran<br>English, Mathematics dan Science</p>${stats?.dailyComplete?'<p class="review-status">Selesai untuk hari ini. Bagus!</p>':'<p>Rutin kecil untuk membina keyakinan.</p>'}</div><button class="button" data-action="daily">${stats?.dailyComplete?'Cuba semula set hari ini':'Mula Cabaran Harian'} ${icon('arrow-right')}</button></section></div>
@@ -88,6 +92,7 @@ async function begin(settings=setup) {
   if(pendingSaves.size)await flushSave();
   if(!learner){pendingStart={...settings};profiles();return;}
   currentQuiz=await post('/quizzes/start',{...settings,count:Number(settings.count),secondsPerQuestion:Number(settings.secondsPerQuestion),studentId:learner.id});
+  trackUsage('quiz_start',{subject:currentQuiz.subject,mode:currentQuiz.mode});
   index=0;go(`session/${currentQuiz.id}`);
 }
 async function session(id) {
@@ -165,6 +170,7 @@ async function finish(){
   submissionPromise=(async()=>{
     await flushSave();
     const result=await post(`/quizzes/${quizId}/submit`);
+    if(!completedUsageIds.has(quizId)){completedUsageIds.add(quizId);trackUsage('quiz_complete',{subject:result.subject,mode:result.mode});}
     for(const [key,pending] of pendingSaves)if(pending.quizId===quizId)pendingSaves.delete(key);
     closeDialog();currentResult=result;go(`result/${result.id}`);return result;
   })().catch(error=>{
@@ -256,6 +262,7 @@ async function handleClick(event) {
     const action=element.dataset.action;
     if(action==='support')showSupport();
     if(action==='feedback')showFeedback();
+    if(action==='analytics-privacy')showAnalyticsPrivacy();
     if(action==='menu'){const open=document.querySelector('#sidebar').classList.toggle('open');element.setAttribute('aria-expanded',String(open));}
     if(action==='profiles')profiles();
     if(action==='start')go('quiz');
@@ -263,11 +270,11 @@ async function handleClick(event) {
     if(action==='export-profile'){
       const studentId=learner.id,status=document.querySelector('#export-status'),errorBox=document.querySelector('#export-error');
       element.disabled=true;element.textContent='Menjana PDF?';if(status)status.textContent='Menyediakan laporan daripada rekod tersimpan?';if(errorBox)errorBox.hidden=true;
-      try{const data=await exportStudent(studentId);const{downloadStudentReport}=await import('./report.js');await downloadStudentReport(data);if(status?.isConnected)status.textContent='Laporan PDF telah disediakan. Semak muat turun pelayar anda.';}
+      try{const data=await exportStudent(studentId);const{downloadStudentReport}=await import('./report.js');await downloadStudentReport(data);trackUsage('report_export',{format:'pdf'});if(status?.isConnected)status.textContent='Laporan PDF telah disediakan. Semak muat turun pelayar anda.';}
       catch(error){if(status?.isConnected)status.textContent='';if(errorBox?.isConnected){errorBox.hidden=false;errorBox.textContent=`Laporan belum dapat dijana. ${error.message}`;}else toast(error.message);}
       finally{if(element.isConnected){element.disabled=false;element.textContent='Eksport Laporan (PDF)';}}
     }
-    if(action==='export-profile-json'){const data=await exportStudent(learner.id),url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='rekod-pelajar.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+    if(action==='export-profile-json'){const data=await exportStudent(learner.id),url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='rekod-pelajar.json';link.click();trackUsage('report_export',{format:'json'});setTimeout(()=>URL.revokeObjectURL(url),1000);}
     if(action==='reload')await renderRoute();
     if(action==='previous')await move(index-1);
     if(action==='next')await move(index+1);
@@ -293,6 +300,8 @@ app.addEventListener('click',handleClick);
 document.querySelector('#dialog').addEventListener('click',handleClick);
 document.querySelector('#support-footer').addEventListener('click',handleClick);
 reserveFooterSpace();
+initOptionalAnalytics();
+window.addEventListener('analytics-choice-changed',()=>document.querySelector('.analytics-choice')?.remove());
 window.addEventListener('hashchange',()=>{index=0;renderRoute();});
 window.addEventListener('beforeunload',event=>{if(pendingSaves.size){event.preventDefault();event.returnValue='';}});
 bootstrap().then(renderRoute).catch(error=>{app.innerHTML=`<main class="content error-page"><h1>Ruang pembelajaran belum dapat dihubungkan.</h1><p>${h(error.message)}</p><p>Semak config Firebase dan sambungan Internet, kemudian muat semula.</p><button class="button" id="reconnect">Muat semula</button></main>`;document.querySelector('#reconnect').addEventListener('click',()=>location.reload());});

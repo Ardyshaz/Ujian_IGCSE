@@ -14,3 +14,8 @@
 12. Update affected documentation and the roadmap. Publishing GitHub does not automatically authorize Firebase deployment or paid services.
 
 [Privacy](../operations/PRIVACY_AND_SECURITY.md) | [Implementation contract](../architecture/IMPLEMENTATION_CONTRACT.md) | [Test guide](../testing/README.md).
+
+
+## Optional Analytics update - 16 November 2026
+
+The user authorised GA4 integration for the linked kuiz-igcse property. It supersedes earlier blanket no-Analytics instructions only when explicitly enabled and consented. Follow docs/features/ANALYTICS.md from the repository root: default off,no SDK before guardian opt-in,strict event/URL allowlists,no learner IDs/names/scores/answers/comments/filenames,ads/signals disabled and reversible browser choice. Enhanced Measurement OFF confirmation is required before activation. Source implementation and mocked privacy tests do not establish live collection or GA4 ingestion.

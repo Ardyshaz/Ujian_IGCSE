@@ -11,3 +11,8 @@ Decision baseline:15 November2026. Current public URL:https://kuiz-igcse.web.app
 - Repository cleanup isolates private files, old backend/document snapshots and generated QA output under ignored .local. public/questions.json is the single bank; fresh clones use generated local Firebase config from a public example. Application runtime public files remain unchanged by the cleanup.
 
 Outstanding research, teacher review, linked accounts/guardian consent, retention/backups, admin question workflow, accessibility/scaling and abuse controls remain in [Task.md](../../Task.md). Detailed executed evidence is [VALIDATION.md](../testing/VALIDATION.md); no candidate's full identity is recorded here.
+
+
+## Optional Analytics update - 16 November 2026
+
+The user authorised GA4 integration for the linked kuiz-igcse property. It supersedes earlier blanket no-Analytics instructions only when explicitly enabled and consented. Follow docs/features/ANALYTICS.md from the repository root: default off,no SDK before guardian opt-in,strict event/URL allowlists,no learner IDs/names/scores/answers/comments/filenames,ads/signals disabled and reversible browser choice. Enhanced Measurement OFF confirmation is required before activation. Source implementation and mocked privacy tests do not establish live collection or GA4 ingestion.

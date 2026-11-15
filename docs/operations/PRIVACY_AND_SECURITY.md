@@ -1,6 +1,6 @@
 # Privacy and security ? Firebase MVP
 
-Profiles and completed attempts are transmitted to Firebase Authentication/Firestore; the former local-only SQLite privacy statement is obsolete. Draf remains browser-local. No Analytics initialization, public leaderboard, external AI marking or service-account credentials are included. Web configuration/API key is public; access control requires deployed Firestore rules.
+Profiles and completed attempts are transmitted to Firebase Authentication/Firestore; the former local-only SQLite privacy statement is obsolete. Draf remains browser-local. Before optional Analytics activation,no Analytics initialization; public leaderboard, external AI marking or service-account credentials are included. Web configuration/API key is public; access control requires deployed Firestore rules.
 
 Minimize child data: nickname is required; guardian label, year and school label are optional. No national ID, contact, real slip, venue/date default or full identity is needed. Obtain guardian permission before storing an actual child's data. The support QR was explicitly supplied for public display; private candidate slips remain outside public.
 
@@ -21,3 +21,8 @@ Private feedback: a Maklum Balas footer button opens a BM form (category, option
 ## PDF report export
 
 PDF report export: the profile panel uses Eksport Laporan (PDF) as the primary export and retains Salinan Data (JSON) for full raw records/answers. Generate A4 reports entirely in the browser using owner-filtered Firestore export data, local jsPDF4.2.1 and bundled OFL Noto Sans fonts. Include selected profile, record period, quiz count, equal-attempt average/best score, total duration, subject accuracy, practice focus with minimum-three-question topic caveat, latest12-attempt trend, complete paginated quiz history, topic table, privacy label/page counts and exact disclaimer. No automatic report upload, external PDF service or publication. Different learners' data must not mix. Empty reports show no fabricated scores. PDF is a human-readable summary, not a machine-restorable backup or official exam/admission prediction. JSON retains full snapshots/answers. Explain local-download privacy, visible generation/error/retry and keep the rest of the SPA functional. docs/features/REPORT_EXPORT.md specifies implementation and validation.
+
+
+## Optional Analytics consent
+
+The new integration is gated off pending stream-setting confirmation. When enabled,the SDK loads only after explicit guardian-directed opt-in,not on decline/default. Google may process cookies,pseudonymous browser identifiers,device/network/IP information after opt-in; no names,learner/attempt IDs,scores,answers,comments or report filenames are assigned by the app. This is separate from essential Firebase Auth/Firestore. Withdrawal does not clear the learner identity/drafts. Server-side Enhanced Measurement must be OFF; advertising/signals remain disabled. This is not proof of verified parental consent or legal compliance. [Full policy](../features/ANALYTICS.md).

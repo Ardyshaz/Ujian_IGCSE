@@ -50,3 +50,11 @@ Authority:[full_prompt.md](full_prompt.md). Live:https://kuiz-igcse.web.app. Rep
 Express routes, SQL schema/entities, SQLite migration/backup, server-side score/deadline enforcement and old backend tests are not active Firebase tasks. Their source requirements remain preserved in the original/full prompt and local historical archives. Firebase replaced the production-database choice; HTTPS Hosting publication was explicitly authorized and completed. Current profile export/deletion exists, but broader account/backup/retention work above is still open.
 
 [Executed checks](docs/testing/VALIDATION.md) | [Research index](docs/research/README.md) | [Privacy](docs/operations/PRIVACY_AND_SECURITY.md).
+
+
+## Optional GA4 integration - 16 November2026
+
+- [x] Confirm linked property/Web App Measurement ID G-F9W4PLD4G9; add gated consent UI and allowlisted sanitized events.
+- [x] Five policy unit checks and mocked browser privacy/withdrawal/mobile checks pass; learning works with tracking off.
+- [ ] Owner confirms Enhanced Measurement OFF; Google signals/property privacy settings reviewed.
+- [ ] Enable/deploy only after required stream settings and final privacy verification; verify real transport and separately record Realtime/DebugView receipt.
