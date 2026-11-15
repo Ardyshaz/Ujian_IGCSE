@@ -1,0 +1,12 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {isCorrect,grade,dashboard,localDay} from '../../public/js/quiz-engine.js';
+const question={id:'sample',topicId:'science:cells',topic:'Cells',subject:'science',type:'short_answer',answer:'cell',acceptedAnswers:['a cell']};
+test('text variants and blanks are distinguished',()=>{assert.ok(isCorrect(question,' A CELL '));assert.ok(!isCorrect(question,''));});
+test('numeric tolerance and finite input',()=>{const q={type:'numerical',answer:3.14,tolerance:0.01};assert.ok(isCorrect(q,'3.145'));assert.ok(!isCorrect(q,'Infinity'));assert.ok(!isCorrect(q,'3.2'));});
+test('option IDs rather than visible letters determine marking',()=>{assert.ok(isCorrect({options:[{id:'b'}],answer:'b'},'b'));assert.ok(!isCorrect({options:[{id:'b'}],answer:'b'},'B'));});
+test('practice records first checked answer after revisions',()=>{const q={id:'q',studentId:'s',subject:'science',mode:'practice',startedAt:Date.now(),questions:[question],drafts:{sample:{firstAnswer:'wrong',answer:'cell',feedbackSeen:true,flagged:true}}};const r=grade(q);assert.equal(r.id,'q');assert.equal(r.percentage,0);assert.equal(r.answers[0].answer,'wrong');assert.ok(r.answers[0].assisted);assert.ok(r.answers[0].flagged);});
+test('expired deadline caps duration and blank answers are counted',()=>{const now=Date.now(),r=grade({id:'q',studentId:'s',subject:'science',mode:'examination',startedAt:now-10000,deadlineAt:now-5000,questions:[question],drafts:{}});assert.equal(r.status,'expired');assert.equal(r.duration,5);assert.equal(r.unanswered,1);});
+test('dashboard computes average per attempt and daily rewards once',()=>{const now=Date.now(),q={id:'a',studentId:'s',subject:'science',mode:'daily',dailyDate:localDay(),startedAt:now,questions:[question],drafts:{sample:{answer:'cell'}}},a=grade(q),b=grade({...q,id:'b',drafts:{}}),d=dashboard([a,b]);assert.equal(d.average,50);assert.equal(d.total,2);assert.equal(d.points,10);assert.equal(d.subjects[2].percentage,50);assert.equal(d.topics[0].question_count,2);assert.ok(d.dailyComplete);});
+test('empty dashboard uses null average rather than a fabricated score',()=>{assert.equal(dashboard([]).average,null);assert.equal(dashboard([]).total,0);});
+test('Malaysia day boundary is independent of computer timezone',()=>{assert.equal(localDay(Date.parse('2026-11-14T17:00:00Z')),'2026-11-15');});

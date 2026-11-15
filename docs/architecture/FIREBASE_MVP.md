@@ -1,0 +1,43 @@
+# Firebase frontend MVP contract
+
+## Active architecture decision ? Firebase SPA (15 November 2026)
+
+The latest user instruction explicitly supersedes every earlier Express, SQLite, REST API, server scoring, server draft/deadline and local-only storage instruction in this document. Those details are retained below as historical requirements and in `.local/archive/document-history/pre-firebase/`; they are not implementation tasks. All educational scope, source verification, original question content, BM UI, guides, glossary, profiles, results, gamification, responsive design and donation footer requirements remain active. `docs/archive/prompts/full_prompt_original.md` remains unchanged.
+
+- Serve the entire application from `public/` on Firebase Hosting; `public/index.html`, `public/css/style.css`, modular `public/js/` and `public/questions.json`. No Express server, SQLite database or privileged Admin SDK in the active runtime.
+- Use the modular Firebase Web SDK (v9+; pinned CDN version 13.3.0). Firebase Anonymous Authentication supplies browser-persisted UID ownership. A student profile is not an independent login. Account linking and recovery across browsers are future work.
+- Store profiles in `students/{id}` and completed results in the top-level `attempts/{quizId}` collection. Each record carries `ownerId`. Attempts include studentId, subject, score/percentage, date, server-createdAt timestamp and full question/answer/explanation snapshots.
+- Query Firestore for the current owner's student and attempts. Dashboard total is the number of completed attempts; average is the arithmetic mean of attempt percentages. Build subject/topic analytics, history and private rewards from these saved records, not browser counters.
+- Use a deterministic quiz/attempt ID and a Firestore transaction: retry returns the first committed result; immutable attempt updates are denied. Show success only after acknowledgement. No silent local-only substitute for completed cloud results.
+- Load original English, Mathematics and Science practice from public local JSON. Keep Practice, Examination, Challenge and Daily Challenge, filters, explanations, flags, review and retry. Dated daily selection is stable for the same published bank; preserve active question snapshots.
+- Active drafts and timers are browser-local and resume on that browser. Completed results are cloud records. First checked Practice answer determines score. Offline final submission remains retryable using saved drafts. Full offline launch/sync is not implemented.
+- All question keys, grading and timer logic are inspectable in a pure client SPA. Scores and client dates are self-reported practice data; Firestore createdAt is the server receipt time. Rules enforce ownership and basic shape/ranges, not trustworthy marking. No claim of tamper-proof examination or secure hidden answer keys. Trusted grading requires a separately authorised future backend architecture.
+- Deploy default-deny Firestore rules, owner-restricted reads/deletes, constrained profile/attempt creation, immutable attempts and no anonymous public data listing. Authentication alone does not protect a shared browser from family members. Do not publish child slips or personal identifiers.
+- Explain cloud storage, guardian permission, minimal nicknames, export/deletion, and loss of access if Anonymous browser identity is cleared. Deleting site data does not delete cloud data. No cross-device recovery promise. No external analytics or public leaderboard.
+- Preserve existing private SQLite files; do not auto-upload or migrate old child records. Legacy runtime and scripts are archived under `.local/archive/legacy/express-sqlite/` and excluded from Hosting. SQLite backup commands no longer apply to active data. JSON exports are user snapshots, not automated cloud backups; cloud recovery, retention and restore drills remain deployment work.
+- Develop locally using `npm run dev` (static files only), or Firebase Hosting/Auth/Firestore emulators. Emulator connections are explicitly enabled in config and restricted to localhost, using `demo-kuiz-igcse`. A production Web App config can be supplied by `/__/firebase/init.json` on Firebase Hosting or `public/js/firebase-config.js`. Never invent config or include service-account keys.
+- Firebase CLI login in another terminal is not evidence of Web SDK configuration, enabled Anonymous provider, deployed rules or a tested cloud write. Record actual test evidence and unresolved setup separately. Hosting deployment was subsequently authorised and completed at https://kuiz-igcse.web.app.
+
+Acceptance: create a nickname profile ? choose each subject from JSON ? answer and submit ? owner-scoped Firestore attempt with score/date/answers ? reload ? Dashboard average/count/history match records. Duplicate submission creates one attempt. A second UID cannot access another UID's profiles/attempts. Unauthenticated access is denied. Mobile footer never covers controls; support modal remains usable. Cloud failure must not display a falsely saved result. Verify local emulators and clearly distinguish emulator from production evidence.
+
+Official technical references, checked 15 November 2026: [modular CDN setup](https://firebase.google.com/docs/web/alt-setup), [Anonymous Authentication](https://firebase.google.com/docs/auth/web/anonymous-auth), [Firestore writes](https://firebase.google.com/docs/firestore/manage-data/add-data), [security rules](https://firebase.google.com/docs/firestore/security/rules-conditions), [Hosting configuration](https://firebase.google.com/docs/hosting/full-config), [emulators](https://firebase.google.com/docs/emulator-suite).
+
+
+## Verified implementation status
+
+Eight engine tests, 31 Firestore emulator rules checks and three-subject browser integration against demo AND REAL kuiz-igcse passed. Rules/indexes and Hosting deployed at https://kuiz-igcse.web.app. See VALIDATION.md for exact evidence and nam5 database provisioning. Anonymous provider enabled by user. No Analytics initialized.
+
+Hosting update: user-authorised publication and live-site three-subject Firestore/Dashboard/mobile integration passed at https://kuiz-igcse.web.app on 15 November 2026. Test learner records and successful-run Auth identity removed. See VALIDATION.md.
+
+
+Quiz update: Semak jawapan automatically persists the review flag and turns the navigation number gold; no manual checkbox. Submit shows progress and inline retryable errors. Partial-score rules use floating-point arithmetic and rounding tolerance; same attempt ID is reused after a20-second acknowledgement timeout. See docs/testing/VALIDATION.md (or ../VALIDATION.md from architecture/) and npm run test:quiz-review for regression evidence.
+
+
+## Private feedback
+
+Private feedback: a Maklum Balas footer button opens a BM form (category, optional nickname,5-2000-character comment). Store in feedback with Anonymous ownerId and server timestamp; no student profile, email or contact required. No web client may get/list/update/delete comment content, including its sender. Only project staff granted Firestore IAM access read/manage it through Firebase Console; no public admin panel, client-side admin password or hardcoded admin UID. Atomic feedbackRateLimits receipts enforce one submission per UID per60seconds using server time and support idempotent acknowledgement retries without exposing content. This is a basic per-identity limit, not comprehensive anti-abuse; App Check/stronger abuse controls remain roadmap work. Do not persist comment drafts to browser storage. Admin procedure: docs/FEEDBACK_ADMIN.md.
+
+
+## PDF report export
+
+PDF report export: the profile panel uses Eksport Laporan (PDF) as the primary export and retains Salinan Data (JSON) for full raw records/answers. Generate A4 reports entirely in the browser using owner-filtered Firestore export data, local jsPDF4.2.1 and bundled OFL Noto Sans fonts. Include selected profile, record period, quiz count, equal-attempt average/best score, total duration, subject accuracy, practice focus with minimum-three-question topic caveat, latest12-attempt trend, complete paginated quiz history, topic table, privacy label/page counts and exact disclaimer. No automatic report upload, external PDF service or publication. Different learners' data must not mix. Empty reports show no fabricated scores. PDF is a human-readable summary, not a machine-restorable backup or official exam/admission prediction. JSON retains full snapshots/answers. Explain local-download privacy, visible generation/error/retry and keep the rest of the SPA functional. docs/features/REPORT_EXPORT.md specifies implementation and validation.

@@ -1,0 +1,85 @@
+CURRENT ARCHITECTURE: Firebase Web SDK client SPA under public/index.html, public/css/style.css and public/js/. Update frontend text only; no Express/SQLite/API implementation. Preserve owner-restricted Firestore persistence, cloud privacy disclosures and Anonymous identity limitations.
+
+Anda sedang bekerja dalam repositori D:\IGCSE untuk aplikasi IGCSE MRSM Preparation Hub.
+
+TUGAS
+Audit dan kemas kini teks antaramuka SPA supaya Bahasa Melayu menjadi bahasa utama, dengan istilah English yang biasa digunakan di Malaysia dikekalkan secara sengaja. Nada mesti ringkas, jelas, mesra ibu bapa dan sesuai untuk pelajar Darjah 6. Elakkan terjemahan bulat-bulat yang kaku. Jika perubahan sudah wujud, sahkan dan kemaskan tanpa menggandakan komponen.
+
+Baca full_prompt.md, docs/project/AGENT.md, docs/project/RULES.md, docs/project/DESIGN.md, docs/project/ARCHITECTURE.md, Task.md dan docs/project/MEMORY.md dahulu. Kekalkan gaya navy/white/gold, susun atur, accessibility dan fungsi sedia ada. Ini kerja aplikasi tempatan; jangan deploy atau menyediakan infrastruktur berbayar.
+
+BAHASA DAN ISTILAH
+- UI, navigasi, borang, mesej status/error, onboarding, Dashboard, keputusan, sejarah dan panduan: BM sebagai bahasa utama.
+- Kekalkan IGCSE, UKKM, MRSM, Dashboard, English, Mathematics, Science dan Level 1, Level 2, dan seterusnya.
+- Nama subjek pada kad/pemilih mesti kekal English, Mathematics dan Science.
+- Istilah seperti feedback, vocab, word problems, Practice, Exam, Challenge, cookies dan backup boleh dikekalkan apabila lebih jelas, dengan penerangan BM jika perlu.
+- Untuk My Progress, gunakan “Prestasi Saya”. Jangan gunakan “Kemajuan” atau “Papan Pemuka”.
+- Jangan ubah bahasa soalan latihan English, petikan kefahaman, pilihan jawapan, kunci jawapan atau penerangan akademik hanya kerana UI ditukar. Kekalkan glosari English–Malay dan definisi pembelajarannya. Label/kawalan di sekelilingnya menggunakan BM.
+- Gunakan lang="ms" pada dokumen utama dan lang="en" pada kandungan pembelajaran English yang berkaitan.
+
+NAVIGASI TEPAT
+Home -> Laman Utama
+Start Quiz -> Mula Kuiz
+Question Bank -> Bank Soalan
+My Progress -> Prestasi Saya
+Student Guide -> Panduan Pelajar
+Parent Guide -> Panduan Ibu Bapa
+About -> Tentang Projek
+
+LAMAN UTAMA DAN HERO
+Small steps. Bright futures. -> Persediaan ke MRSM IGCSE bermula di sini.
+Build your confidence for the journey ahead. -> Bina keyakinan anak anda, satu soalan pada satu masa.
+Your next chapter starts here. -> Pilih Subjek Anda
+Explore English, Mathematics and Science... -> Pilih subjek di bawah untuk mula buat latihan dan ulang kaji.
+Start learning -> Mula Ulang Kaji
+Choose a subject to practise -> Latih Tubi Subjek
+Daily Challenge -> Cabaran Harian (Daily Challenge)
+Create your learner profile -> Cipta Profil Pelajar
+Recent activity -> Aktiviti Terkini
+
+KUIZ, BANK SOALAN DAN KEPUTUSAN
+Question -> Soalan
+Submit -> Hantar Jawapan
+Next -> Seterusnya
+Previous -> Kembali
+Explanation -> Penerangan Jawapan
+Score -> Markah
+Mark for review -> Tanda untuk semakan
+Attempt history -> Sejarah cubaan
+Correct -> Betul
+Incorrect -> Salah
+Unanswered -> Belum dijawab
+
+Mod boleh dipaparkan sebagai Latihan (Practice), Simulasi Ujian (Exam), Cabaran (Challenge) dan Cabaran Harian (Daily Challenge). Kekalkan ID mode/API asal. Terjemahkan label kategori prestasi dan pencapaian pada UI tanpa mengubah rekod/ID asal.
+
+INFO RINGKAS DI BAHAGIAN UTAMA
+Letakkan ringkasan “MRSM IGCSE, ringkasnya” dekat hero, dengan ayat pendek dan pautan sumber rasmi bersebelahan fakta. Rujuk docs/research/11-home-guide-fact-check.md dan dokumen research 01–07.
+- Jelaskan gabungan kurikulum kebangsaan/KSSM, MRSM dan Cambridge berdasarkan dokumen MARA yang berkaitan.
+- Nyatakan panduan MARA tentang IGCSE akhir Tingkatan 4 dan SPM Tingkatan 5, dengan kelayakan mengikut program/kohort.
+- Galakkan pengetahuan, kefahaman konsep, aplikasi dan kemahiran berfikir. Jangan dakwa SPM hanya hafalan atau hafalan langsung tidak diperlukan.
+- Bezakan ujian kemasukan/Ujian Khas daripada peperiksaan akhir Cambridge IGCSE.
+- Jangan nyatakan ujian khas “100% English”, senarai lengkap subjek, format A–D/subjektif, jumlah soalan, tempoh atau ambang lulus sebagai fakta tanpa sumber rasmi khusus yang menyokongnya.
+- Tambah tips ulang kaji yang dilabel panduan umum: vocab, command words, unit, word problems, pemboleh ubah, latihan pendek dan semakan kesilapan.
+- Jangan menjanjikan kemasukan MRSM, universiti, biasiswa atau penempatan alternatif.
+- Jangan menerbitkan nama penuh, identiti, tempat atau jadual peribadi calon daripada slip keluarga.
+
+KEKALKAN SEMUA FUNGSI
+- Tujuh destinasi SPA, semua empat mod, pemasa server, draft/flag tersimpan, pemarkahan server, snapshots, sejarah/retake, statistik, streak/milestones dan eksport/padam profil.
+- Semua 300 soalan, 62 topik, tujuh format objektif dan 100 istilah glosari dengan carian/penapis kategori.
+- Jangan rename route, ID, medan database atau skema jawapan untuk tujuan bahasa. Jangan reset database, padam rekod pengguna atau overwrite arkib asal.
+- Footer tetap “☕ Sokong Projek Ini (100% Percuma)” mesti kekal pada semua skrin. Kekalkan QR yang dibenarkan, teks sumbangan tepat sedia ada, Tutup/backdrop/Escape dan ruang bawah automatik supaya kandungan/butang kuiz tidak terlindung.
+- Slip peribadi .local/private/candidate-slips/1.jpeg, .local/private/candidate-slips/2.jpeg dan .local/private/candidate-notes/ mesti kekal di luar Git dan public assets. QR sumbangan yang pengguna benarkan ialah aset awam yang berasingan.
+
+IMPLEMENTASI
+Kemas kini fail rendering HTML/JavaScript yang berkaitan, contohnya public/index.html, public/assets/app.js, ui.js, guides.js, messages.js dan home-guide.js. Gunakan pemetaan label yang kemas bila sesuai. Jangan buat global text replacement yang mengubah nama pemboleh ubah atau data akademik. Terjemahkan juga label accessibility, status simpan/loading/empty/error serta teks pengesahan.
+
+SEMAKAN PENERIMAAN
+1. Jalankan semakan syntax, npm run check:content dan npm test apabila perubahan melibatkan kontrak/data/logik.
+2. Jalankan browser QA pada localhost. Semak semua tujuh halaman, cipta profil ujian berasingan, kuiz tiga subjek, jawapan teks/nombor, feedback, refresh, submit dan sejarah.
+3. Pastikan nama subjek dan Level kekal, manakala navigasi/borang/mesej utama BM dan Prestasi Saya tidak menjadi Kemajuan.
+4. Semak glosari, penapis, FAQ dan ringkasan rasmi/sumber pada Laman Utama.
+5. Semak 360px, 390px, 768px, 1024px dan desktop; tiada clipping/horizontal overflow. Uji footer/modal pada skrin pendek dan pastikan Hantar Jawapan boleh dicapai di atas footer.
+6. Uji keyboard/focus, Escape, klik backdrop, reduced motion dan tiada runtime error yang tidak dijangka.
+7. Kekalkan rekod pengguna sebenar. Ujian pelayar mesti menggunakan profil/household fiksyen berasingan dan hanya membersihkan rekod ujiannya sendiri.
+8. Selaraskan full_prompt.md, Task.md, docs/project/MEMORY.md dan dokumen sokongan; laporkan perubahan sebenar, semakan yang dilaksanakan, keputusan serta perkara yang belum disahkan. Jangan mendakwa ujian lulus jika tidak dijalankan.
+
+Terus buat perubahan dan semakan yang dibenarkan; jangan berhenti pada pelan sahaja. Jangan deploy awam.

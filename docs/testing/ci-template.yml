@@ -1,0 +1,31 @@
+name: Source checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci --no-audit
+      - run: npm test
+      - run: npm run check:content
+      - run: npm run check:docs
+      - run: npm run check:repo
+      - name: Firestore rules against local demo emulator
+        run: npx firebase emulators:exec --only firestore --project demo-kuiz-igcse "npm run test:rules"

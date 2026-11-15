@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.pdf -text
+*.ttf -text
+# Preserve source bytes/checksums including historical line endings.
+docs/archive/prompts/full_prompt_original.md -text
+docs/archive/prototype/igcse_prep_quiz.html -text
+# Historical formatting/upstream distributions are preserved rather than whitespace-rewritten.
+docs/archive/** -whitespace
+public/assets/vendor/* -whitespace

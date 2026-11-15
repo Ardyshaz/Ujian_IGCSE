@@ -1,0 +1,97 @@
+{
+  "researchDate": "2026-11-15",
+  "intake": "2027",
+  "status": "qualified-primary-source-research",
+  "notice": "Independent learning resource. Practice results do not predict MRSM admission. Exact special-test format and the parent-provided date remain unverified.",
+  "sources": [
+    {
+      "id": "S-M01",
+      "title": "MARA MyMRSM 2027 requirements",
+      "url": "https://mrsm.mara.gov.my/mymrsm/",
+      "accessed": "2026-11-15",
+      "status": "verified-cycle-specific"
+    },
+    {
+      "id": "S-M02",
+      "title": "MARA MRSM 2027 application FAQ",
+      "url": "https://mrsm.mara.gov.my/mymrsm/FAQ%20MYMRSM2026.pdf",
+      "accessed": "2026-11-15",
+      "status": "verified-cover-2027-despite-filename"
+    },
+    {
+      "id": "S-M03",
+      "title": "MARA programme choices and requirements",
+      "url": "https://mrsm.mara.gov.my/mymrsm/Syarat%20dan%20Pilihan%20Program%20MRSM.pdf",
+      "accessed": "2026-11-15",
+      "status": "verified-served-from-2027-portal"
+    },
+    {
+      "id": "S-C01",
+      "title": "Cambridge IGCSE overview",
+      "url": "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-upper-secondary/cambridge-igcse/",
+      "accessed": "2026-11-15",
+      "status": "verified-overview"
+    },
+    {
+      "id": "S-C02",
+      "title": "Cambridge Lower Secondary",
+      "url": "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-lower-secondary/",
+      "accessed": "2026-11-15",
+      "status": "verified-overview"
+    },
+    {
+      "id": "S-C11",
+      "title": "Cambridge classroom support",
+      "url": "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-upper-secondary/cambridge-igcse/classroom-support/",
+      "accessed": "2026-11-15",
+      "status": "public-categories-restricted-resources-not-read"
+    }
+  ],
+  "guideCards": [
+    {
+      "claimId": "M-201",
+      "title": "Laluan permohonan berbeza",
+      "body": "Semak laluan PKSK atau UKKM yang berkenaan dan syarat ujian tambahan dalam panduan MARA bagi pengambilan 2027. Jangan anggap semua calon menduduki format yang sama.",
+      "sourceId": "S-M01",
+      "kind": "verified-with-qualification"
+    },
+    {
+      "claimId": "P-301",
+      "title": "Program dwi-kurikulum",
+      "body": "Panduan program MARA menggabungkan kurikulum kebangsaan, MRSM dan Cambridge. Rujuk maktab untuk susunan mata pelajaran kohort anak.",
+      "sourceId": "S-M03",
+      "kind": "verified-with-qualification"
+    },
+    {
+      "claimId": "G-501",
+      "title": "Bina keyakinan secara beransur",
+      "body": "Mulakan dengan latihan tanpa pemasa, bincang kesilapan dan cuba set pendek. Tambah latihan masa apabila anak bersedia.",
+      "sourceId": null,
+      "kind": "general-guidance"
+    },
+    {
+      "claimId": "G-502",
+      "title": "Semak kos dan bantuan",
+      "body": "Dapatkan yuran serta syarat bantuan terkini daripada pihak maktab. Angka dalam artikel lama bukan janji kos atau kelayakan bantuan.",
+      "sourceId": null,
+      "kind": "general-guidance"
+    }
+  ],
+  "unverified": [
+    "18 November 2026 as an official assessment date",
+    "Exact IGCSE Ujian Khas subject count, duration, marking, delivery and calculator rules",
+    "Universal minimum threshold or fixed socioeconomic quotas",
+    "Individual admission outcome, fallback placement or scholarship eligibility",
+    "Fixed examination fees or BUDI cash amounts",
+    "Ammar future Cambridge subject routes and examination years"
+  ],
+  "researchDocuments": [
+    "docs/research/01-cambridge-igcse.md",
+    "docs/research/02-mrsm-form1-admission.md",
+    "docs/research/03-mrsm-igcse-programme.md",
+    "docs/research/04-ukkm-and-selection-assessment.md",
+    "docs/research/05-examination-preparation-strategy.md",
+    "docs/research/06-question-bank-research.md",
+    "docs/research/07-sources-and-verification.md"
+  ]
+}

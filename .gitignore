@@ -1,0 +1,34 @@
+# Dependencies and generated state
+node_modules/
+.firebase/
+.local/
+data/
+backups/
+tmp/
+output/
+test-results/
+playwright-report/
+*.log
+*.sqlite*
+*.db
+# Local configuration and credentials
+public/js/firebase-config.js
+.env
+.env.*
+!.env.example
+*service-account*.json
+*firebase-adminsdk*.json
+*.pem
+*.p12
+*.pfx
+# Defensive exclusions for former private locations
+docs/private/
+docs/gemini/
+docs/1.jpeg
+docs/2.jpeg
+# OS/editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.tmp

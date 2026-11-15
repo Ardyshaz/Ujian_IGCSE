@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn() { return request.auth != null; }
+  function owner(data) { return signedIn() && data.ownerId == request.auth.uid; }
+  function validScore(data) {
+   // Force floating-point arithmetic. Integer division truncates partial scores.
+   let expected = 100.0 * data.correct / data.total;
+   return data.score >= expected - 0.000001 && data.score <= expected + 0.000001;
+  }
+  match /students/{studentId} {
+   allow read, delete: if owner(resource.data);
+   allow create: if owner(request.resource.data)
+    && request.resource.data.keys().hasOnly(['id','ownerId','display_name','guardian_name','year_level','school_name','createdAt'])
+    && request.resource.data.id == studentId
+    && request.resource.data.display_name is string
+    && request.resource.data.display_name.size() > 0 && request.resource.data.display_name.size() <= 60
+    && request.resource.data.guardian_name is string && request.resource.data.guardian_name.size() <= 60
+    && request.resource.data.year_level is string && request.resource.data.year_level.size() <= 30
+    && request.resource.data.school_name is string && request.resource.data.school_name.size() <= 100
+    && request.resource.data.createdAt == request.time;
+   allow update: if false;
+  }
+  match /attempts/{attemptId} {
+   // A transaction may read its as-yet nonexistent deterministic attempt ID.
+   allow get: if signedIn() && (!exists(/databases/$(database)/documents/attempts/$(attemptId)) || owner(resource.data));
+   allow list, delete: if owner(resource.data);
+   allow create: if owner(request.resource.data)
+    && request.resource.data.keys().hasOnly(['id','quizId','studentId','ownerId','subject','mode','status','date','startedAt','dailyDate','total','correct','incorrect','unanswered','percentage','category','duration','answers','score','createdAt'])
+    && request.resource.data.id == attemptId && request.resource.data.quizId == attemptId
+    && get(/databases/$(database)/documents/students/$(request.resource.data.studentId)).data.ownerId == request.auth.uid
+    && request.resource.data.subject in ['english','mathematics','science','mixed']
+    && request.resource.data.mode in ['practice','examination','challenge','daily']
+    && request.resource.data.status in ['submitted','expired']
+    && request.resource.data.total is int && request.resource.data.total > 0 && request.resource.data.total <= 50
+    && request.resource.data.answers is list && request.resource.data.answers.size() == request.resource.data.total
+    && request.resource.data.correct is int && request.resource.data.correct >= 0
+    && request.resource.data.incorrect is int && request.resource.data.incorrect >= 0
+    && request.resource.data.unanswered is int && request.resource.data.unanswered >= 0
+    && request.resource.data.correct + request.resource.data.incorrect + request.resource.data.unanswered == request.resource.data.total
+    && request.resource.data.score is number && request.resource.data.score >= 0 && request.resource.data.score <= 100
+    && request.resource.data.percentage == request.resource.data.score
+    && validScore(request.resource.data)
+    && request.resource.data.date is string && request.resource.data.date.size() <= 40
+    && request.resource.data.startedAt is number && request.resource.data.duration is number && request.resource.data.duration >= 0
+    && request.resource.data.createdAt == request.time;
+   allow update: if false;
+  }
+  match /feedback/{feedbackId} {
+   // Project admins read through Firebase Console/IAM. No web client can read comments.
+   allow read, update, delete: if false;
+   allow create: if signedIn()
+    && request.resource.data.keys().hasAll(['ownerId','category','message','displayName','page','createdAt'])
+    && request.resource.data.keys().hasOnly(['ownerId','category','message','displayName','page','createdAt'])
+    && owner(request.resource.data)
+    && request.resource.data.category in ['cadangan','masalah','soalan','lain']
+    && request.resource.data.message is string
+    && request.resource.data.message.size() >= 5 && request.resource.data.message.size() <= 2000
+    && request.resource.data.displayName is string && request.resource.data.displayName.size() <= 60
+    && request.resource.data.page in ['home','quiz','bank','progress','student','parent','about','session','result']
+    && request.resource.data.createdAt == request.time
+    && getAfter(/databases/$(database)/documents/feedbackRateLimits/$(request.auth.uid)).data.submissionId == feedbackId
+    && getAfter(/databases/$(database)/documents/feedbackRateLimits/$(request.auth.uid)).data.lastSubmittedAt == request.time;
+  }
+  match /feedbackRateLimits/{uid} {
+   // Private receipt contains no message or nickname; supports safe acknowledgement retry.
+   allow get: if signedIn() && request.auth.uid == uid;
+   allow list, delete: if false;
+   allow create, update: if signedIn() && request.auth.uid == uid
+    && request.resource.data.keys().hasAll(['submissionId','lastSubmittedAt'])
+    && request.resource.data.keys().hasOnly(['submissionId','lastSubmittedAt'])
+    && request.resource.data.submissionId is string && request.resource.data.submissionId.size() <= 80
+    && request.resource.data.lastSubmittedAt == request.time
+    && (!exists(/databases/$(database)/documents/feedbackRateLimits/$(uid))
+        || request.time >= resource.data.lastSubmittedAt + duration.value(60,'s'))
+    && getAfter(/databases/$(database)/documents/feedback/$(request.resource.data.submissionId)).data.ownerId == uid
+    && getAfter(/databases/$(database)/documents/feedback/$(request.resource.data.submissionId)).data.createdAt == request.time;
+  }
+  match /{document=**} { allow read,write: if false; }
+ }
+}

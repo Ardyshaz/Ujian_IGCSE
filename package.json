@@ -1,0 +1,40 @@
+{
+  "name": "igcse-mrsm-preparation-hub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "postinstall": "node scripts/dev/setup-config.js",
+    "setup": "node scripts/dev/setup-config.js",
+    "setup:emulators": "node scripts/dev/setup-config.js --emulators",
+    "setup:cloud": "node scripts/dev/setup-config.js --cloud",
+    "dev": "node scripts/dev/serve-static.js",
+    "start": "node scripts/dev/serve-static.js",
+    "test": "node --test --test-isolation=none --test-concurrency=1 tests/unit/*.test.js",
+    "check:content": "node scripts/validate/content.js",
+    "check:docs": "node scripts/validate/docs.js",
+    "check:repo": "node scripts/validate/repository.js",
+    "emulators": "firebase emulators:start --project demo-kuiz-igcse",
+    "test:ui": "node scripts/qa/firebase-ui.js",
+    "test:rules": "node --test --test-isolation=none --test-concurrency=1 tests/rules/*.test.js",
+    "test:quiz-review": "node scripts/qa/quiz-review.js",
+    "test:feedback:rules": "node tests/rules/feedback.rules.test.js",
+    "test:feedback:ui": "node scripts/qa/feedback.js",
+    "test:report": "node --test --test-isolation=none tests/unit/report-model.test.js",
+    "test:report:ui": "node scripts/qa/report.js",
+    "check:report:pdf": "python scripts/validate/report-pdfs.py"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
+    "firebase": "^13.3.0",
+    "firebase-tools": "^15.36.0",
+    "jspdf": "4.2.1",
+    "playwright-core": "1.64.1"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.13.6"
+  }
+}
