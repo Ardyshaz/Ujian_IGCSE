@@ -40,3 +40,6 @@ npm run test:selection:ui verifies the history-aware engine against demo emulato
 
 
 The selection UI suite also checks the Dashboard glossary hero,next-term keyboard focus,mode means,Home/deep-link navigation,all180 glossary rows,English/BM searches,combined category filters and360px glossary overflow. Unit tests validate glossary uniqueness/schema,daily-term bounds and per-mode denominators.
+
+
+npm run test:hall:ui exercises synthetic profile editing/enrollment,the actual emulator admin publisher,category/detail/mobile views,private-field exclusion,withdrawal/stale-commit rejection and profile deletion cleanup. npm run test:rules includes39 Hall/profile assertions in addition to existing31 owner/score and23 feedback assertions. Run rules suites before browser QA because they clear only the demo database. No real child is enrolled by these tests.

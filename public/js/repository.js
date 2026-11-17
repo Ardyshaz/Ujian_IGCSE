@@ -1,4 +1,6 @@
 import {connectFirebase} from './firebase.js';
+import {profileFields} from './profile-fields.js';
+import {withdrawHall} from './hall-service.js';
 const clean = value => JSON.parse(JSON.stringify(value));
 export async function listRecords(name, studentId) {
   const {db,ownerId,sdk:s} = await connectFirebase();
@@ -13,12 +15,16 @@ export async function getRecord(name,id) {
   return {...record.data(),id:record.id};
 }
 export async function createStudent(input) {
-  const display_name=String(input.displayName||'').trim();
-  if (!display_name || display_name.length>60) throw new Error('Nama paparan perlu antara 1 hingga 60 aksara.');
-  const profile={id:crypto.randomUUID(),display_name,guardian_name:String(input.guardianName||'').trim().slice(0,60),year_level:String(input.yearLevel||'').slice(0,30),school_name:String(input.schoolName||'').trim().slice(0,100)};
+  const profile={id:crypto.randomUUID(),...profileFields(input)};
   const {db,ownerId,sdk:s}=await connectFirebase();
   await s.setDoc(s.doc(db,'students',profile.id),{...profile,ownerId,createdAt:s.serverTimestamp()});
   return profile;
+}
+export async function updateStudent(id,input){
+  await getRecord('students',id);
+  const fields=profileFields(input),{db,sdk:s}=await connectFirebase();
+  await s.updateDoc(s.doc(db,'students',id),fields);
+  return getRecord('students',id);
 }
 export async function saveAttempt(result) {
   const {db,ownerId,sdk:s}=await connectFirebase();
@@ -40,6 +46,7 @@ export async function saveAttempt(result) {
 export async function deleteStudent(id,confirmName) {
   const profile=await getRecord('students',id);
   if(confirmName!==profile.display_name)throw new Error('Taip nama paparan pelajar untuk mengesahkan pemadaman.');
+  await withdrawHall(id);
   const records=await listRecords('attempts',id);
   const {db,sdk:s}=await connectFirebase();
   // Profile is removed last so a failed partial deletion remains retryable.

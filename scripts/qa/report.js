@@ -14,7 +14,7 @@ try{
  await page.goto(base);await page.locator('.hero').waitFor();
  fixture=await page.evaluate(async()=>{
   const{post}=await import('/js/api.js'),{saveAttempt}=await import('/js/repository.js'),{grade}=await import('/js/quiz-engine.js');
-  const profile=await post('/students',{displayName:'Pelajar Contoh',guardianName:'Penjaga Contoh',yearLevel:'Year 6',schoolName:'Sekolah Contoh'});
+  const profile=await post('/students',{displayName:'Pelajar Contoh',guardianName:'Penjaga Contoh',yearLevel:'Year 6',schoolName:'Sekolah Contoh',state:'Perak'});
   const sibling=await post('/students',{displayName:'SIBLING-NOT-IN-REPORT'});
   const bank=await(await fetch('/questions.json')).json(),subjects=['english','mathematics','science'],scores=[3,2,4,1,2,3];
   for(let i=0;i<6;i++){

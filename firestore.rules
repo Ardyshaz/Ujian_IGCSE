@@ -9,17 +9,25 @@ service cloud.firestore {
    return data.score >= expected - 0.000001 && data.score <= expected + 0.000001;
   }
   match /students/{studentId} {
-   allow read, delete: if owner(resource.data);
+   allow read: if owner(resource.data);
+   allow delete: if owner(resource.data) && !existsAfter(/databases/$(database)/documents/hallConsents/$(studentId));
    allow create: if owner(request.resource.data)
-    && request.resource.data.keys().hasOnly(['id','ownerId','display_name','guardian_name','year_level','school_name','createdAt'])
+    && request.resource.data.keys().hasOnly(['id','ownerId','display_name','guardian_name','year_level','school_name','state','createdAt'])
     && request.resource.data.id == studentId
     && request.resource.data.display_name is string
     && request.resource.data.display_name.size() > 0 && request.resource.data.display_name.size() <= 60
     && request.resource.data.guardian_name is string && request.resource.data.guardian_name.size() <= 60
     && request.resource.data.year_level is string && request.resource.data.year_level.size() <= 30
     && request.resource.data.school_name is string && request.resource.data.school_name.size() <= 100
+    && (!('state' in request.resource.data) || validState(request.resource.data.state))
     && request.resource.data.createdAt == request.time;
-   allow update: if false;
+   allow update: if owner(resource.data) && owner(request.resource.data)
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['display_name','guardian_name','year_level','school_name','state'])
+    && request.resource.data.display_name is string && request.resource.data.display_name.size() > 0 && request.resource.data.display_name.size() <= 60
+    && request.resource.data.guardian_name is string && request.resource.data.guardian_name.size() <= 60
+    && request.resource.data.year_level is string && request.resource.data.year_level.size() <= 30
+    && request.resource.data.school_name is string && request.resource.data.school_name.size() <= 100
+    && (!('state' in request.resource.data) || validState(request.resource.data.state));
   }
   match /attempts/{attemptId} {
    // A transaction may read its as-yet nonexistent deterministic attempt ID.
@@ -75,6 +83,51 @@ service cloud.firestore {
         || request.time >= resource.data.lastSubmittedAt + duration.value(60,'s'))
     && getAfter(/databases/$(database)/documents/feedback/$(request.resource.data.submissionId)).data.ownerId == uid
     && getAfter(/databases/$(database)/documents/feedback/$(request.resource.data.submissionId)).data.createdAt == request.time;
+  }
+  function validState(value) {
+   return value is string && value in ['', 'Johor','Kedah','Kelantan','Melaka','Negeri Sembilan','Pahang','Perak','Perlis','Pulau Pinang','Sabah','Sarawak','Selangor','Terengganu','W.P. Kuala Lumpur','W.P. Labuan','W.P. Putrajaya'];
+  }
+  match /hallConsents/{studentId} {
+   allow get: if signedIn() && (!exists(/databases/$(database)/documents/hallConsents/$(studentId)) || owner(resource.data));
+   allow list, update: if false;
+   allow create: if owner(request.resource.data)
+    && get(/databases/$(database)/documents/students/$(studentId)).data.ownerId == request.auth.uid
+    && request.resource.data.keys().hasAll(['ownerId','publicId','alias','version','guardianConfirmed','createdAt'])
+    && request.resource.data.keys().hasOnly(['ownerId','publicId','alias','version','guardianConfirmed','createdAt'])
+    && request.resource.data.publicId is string && request.resource.data.publicId.matches('^[a-f0-9-]{36}$')
+    && request.resource.data.alias is string && request.resource.data.alias.size() >= 2 && request.resource.data.alias.size() <= 24
+    && !request.resource.data.alias.matches('.*[@<>/\\\\].*') && !request.resource.data.alias.matches('.*[0-9]{5}.*')
+    && request.resource.data.version == 1 && request.resource.data.guardianConfirmed == true
+    && request.resource.data.createdAt == request.time
+    && getAfter(/databases/$(database)/documents/hallOwners/$(request.resource.data.publicId)).data.ownerId == request.auth.uid
+    && getAfter(/databases/$(database)/documents/hallOwners/$(request.resource.data.publicId)).data.studentId == studentId;
+   allow delete: if owner(resource.data)
+    && !existsAfter(/databases/$(database)/documents/hallOwners/$(resource.data.publicId))
+    && !existsAfter(/databases/$(database)/documents/hallEntries/$(resource.data.publicId));
+  }
+  match /hallOwners/{publicId} {
+   allow get: if owner(resource.data);
+   allow list, update: if false;
+   allow create: if owner(request.resource.data)
+    && request.resource.data.keys().hasAll(['ownerId','studentId','createdAt'])
+    && request.resource.data.keys().hasOnly(['ownerId','studentId','createdAt'])
+    && request.resource.data.studentId is string
+    && request.resource.data.createdAt == request.time
+    && getAfter(/databases/$(database)/documents/hallConsents/$(request.resource.data.studentId)).data.publicId == publicId
+    && getAfter(/databases/$(database)/documents/hallConsents/$(request.resource.data.studentId)).data.ownerId == request.auth.uid;
+   allow delete: if owner(resource.data)
+    && !existsAfter(/databases/$(database)/documents/hallConsents/$(resource.data.studentId))
+    && !existsAfter(/databases/$(database)/documents/hallEntries/$(publicId));
+  }
+  match /hallEntries/{publicId} {
+   // Only curated, consented aggregate fields are published by CLI IAM, never raw learner records.
+   allow get: if true;
+   allow list: if request.query.limit != null && request.query.limit <= 30;
+   allow create, update: if false;
+   allow delete: if signedIn()
+    && get(/databases/$(database)/documents/hallOwners/$(publicId)).data.ownerId == request.auth.uid
+    && !existsAfter(/databases/$(database)/documents/hallOwners/$(publicId))
+    && !existsAfter(/databases/$(database)/documents/hallConsents/$(get(/databases/$(database)/documents/hallOwners/$(publicId)).data.studentId));
   }
   match /{document=**} { allow read,write: if false; }
  }

@@ -24,3 +24,6 @@ npm run check:report:pdf uses Python pypdf/PyMuPDF to inspect generated PDFs und
 
 
 17 November2026:PDF focus recommendations now require at least3 distinct question IDs per topic and use each ID's latest saved outcome. Full subject/topic tables retain all-answer denominators; the PDF caveat explains this. Earlier wording based on3 repeated snapshots is superseded. See [learning engine](LEARNING_ENGINE.md).
+
+
+18 November2026:profile editing preserves attempt IDs/scores;reports use current private profile fields. PDF labels Darjah1-6/Tingkatan1-5 in BM and combines optional school/state in its private profile block;JSON includes optional state. Community cards never include either school or state.

@@ -144,3 +144,25 @@ The existing mocked Analytics UI regression also passed:default/deny/reload impo
 
 
 Dashboard/glossary Hosting-only deployment completed. HTTP SHA-256 comparisons verified the live glossary-spotlight.js,guides.js,app.js,quiz-engine.js and style.css match the tested source. Staged repository scan passed109 source paths with original archive checksums intact and private/generated files excluded. Source and all seven project companion documents,full_prompt.md,Task.md,the feature guide and validation records were updated together. No production learner records were written for verification.
+
+
+## Community recognition and profile editing -18 November2026
+
+36/36 unit tests passed. Seven new tests cover Malaysia week boundaries,explicit consent/matching ownership,first-encounter/repeat and minimum30 semantics,Top5 limits,bank/version/key recomputation and optional profile validation. One initial sanitizer fixture shared question objects with the reference bank;cloned fixture objects and reran successfully.
+
+All actual emulator rules suites passed:31 existing profile/attempt score checks,23 feedback checks and39 new Hall/profile checks (93 assertions total). New checks cover owner-only editable fields and immutable identity/time,private consent/mapping access,bounded public reads,no client score publication,atomic opt-in/withdrawal,withdrawal before publication and profile deletion cleanup. PERMISSION_DENIED output is expected for negative assertions. No production rules were relaxed for tests.
+
+Demo browser Hall/profile workflow passed:edit nickname/year/school/state while retaining the same saved attempt;separate blank public alias and unchecked guardian declaration;real maintenance publisher producing one eligible30-question card;public details/categories;no school/state/guardian/private IDs in projection;390px no overflow;atomic withdrawal;old-consent publication commit rejection;and enrolled-profile deletion cleanup. Final evidence is in OS temp igcse-hall-profile-OsV5Qv;desktop editor and mobile Hall screenshots were visually reviewed from the same tested flow. Only synthetic demo records were used. Structured host browser access remained unavailable,so existing isolated Playwright QA was used;no physical Android/iOS claim.
+
+Extended selection/Dashboard/glossary browser regression passed after integration. Existing Analytics consent/withdrawal/filtering/cookie/browser-layout regression passed,with mocked Google collection and no new events. Existing quiz-review regression passed preserving gold flags,first answers,offline submit errors,idempotent90% retry and mobile behavior.
+
+PDF/JSON export browser regression passed with optional state in a synthetic private profile;selected-learner isolation,font retry,empty/multilingual/long-name/120-attempt cases remain valid. PDF structure/bounds checks passed:two-page normal/mobile,one-page empty,nine-page stress. Current-level BM labels and school/state remain confined to private exports. Updated synthetic example is explicitly labelled fictional.
+
+No real student is automatically enrolled,published or renamed by this feature's QA. All live analysis/rename audit files remain ignored under .local. Public publication requires a separate explicit guardian alias enrollment and manual admin refresh;no scheduled/paid backend or automatic TTL cleanup was added. Client-accessible answer keys and self-directed practice remain limitations despite publisher validation.
+
+
+Rules compiled and released with Hosting. The existing CLI IAM preview found0 live opt-ins/0 proposed public cards;no child was automatically enrolled or published. Ten deployed assets (Hall/profile modules,repository/API/app/report and CSS) match tested local SHA-256 hashes. Unauthenticated read-only REST checks passed:a current-week Hall query with limit30 returns0 cards,while students,attempts,hallConsents and hallOwners queries each return403. This verifies production public/private read boundaries,not a production owner-write workflow.
+
+Automatic approval review rejected an optional live smoke test that would create/delete a disposable production profile and Anonymous identities,because those consequential production writes were not specifically authorised. The command did not run. No indirect retry was attempted;verification continued with the read-only HTTP checks above and existing emulator mutation coverage. No test production profile or Auth identity was created.
+
+Staged repository scan passed119 source paths with private/generated data excluded and provenance checksums intact. Current docs validation covers48 Markdown documents. Source documentation includes full_prompt.md,Task.md,all seven project companion documents,schema/privacy/deployment/API guidance,the community/profile feature guide and the clearly fictional PDF example.

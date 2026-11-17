@@ -1,10 +1,11 @@
+import {PROFILE_YEARS} from './profile-fields.js';
 import {dashboard} from './quiz-engine.js';
 
 const NAVY='#162c49',GOLD='#e9b75e',INK='#243750',MUTED='#66758a',LINE='#dde4ed',PALE='#f4f7fb';
 const M=16,W=178,BOTTOM=267;
 const SUBJECTS={english:'English',mathematics:'Mathematics',science:'Science',mixed:'Campuran'};
 const MODES={practice:'Latihan',examination:'Simulasi ujian',challenge:'Cabaran',daily:'Cabaran Harian'};
-const YEARS={'Year 5':'Darjah 5','Year 6':'Darjah 6','Form 1':'Tingkatan 1','Form 2':'Tingkatan 2',Other:'Lain-lain'};
+const YEARS=Object.fromEntries(PROFILE_YEARS);
 const DISCLAIMER='PENAFIAN: Platform ini dibangunkan secara bebas untuk tujuan pendidikan dan latihan sahaja. Semua bahan bukan penerbitan rasmi dan tidak disokong, ditaja atau mempunyai sebarang kaitan dengan MARA, MRSM atau Cambridge.';
 const pct=n=>Number.isFinite(n)?`${n.toLocaleString('ms-MY',{maximumFractionDigits:1})}%`:'-';
 const time=n=>{n=Math.max(0,Math.round(Number(n)||0));return n>=3600?`${Math.floor(n/3600)}j ${Math.floor(n%3600/60)}m`:`${Math.floor(n/60)}m ${n%60}s`;};
@@ -101,7 +102,7 @@ export async function createStudentReport(data,{generatedAt=new Date(),sample=fa
   font(25,true,'#ffffff');doc.text('Laporan Prestasi',M,36);
   font(17,true,GOLD);names.forEach((name,i)=>profileText(name,M,49+i*8));
   y=headerHeight+7;font(8,false,MUTED);doc.text(`Dijana: ${stamp(generatedAt,true)} MYT`,M,y);doc.text('kuiz-igcse.web.app',194,y,{align:'right'});y+=9;
-  const fields=[['TAHAP',YEARS[profile.year_level]||profile.year_level||'Tidak dinyatakan'],['PENJAGA',profile.guardian_name||profile.guardian_display_name||'Tidak dinyatakan'],['SEKOLAH',profile.school_name||'Tidak dinyatakan'],['TEMPOH REKOD',model.period]];
+  const fields=[['TAHAP',YEARS[profile.year_level]||profile.year_level||'Tidak dinyatakan'],['PENJAGA',profile.guardian_name||profile.guardian_display_name||'Tidak dinyatakan'],['SEKOLAH / NEGERI',[profile.school_name,profile.state].filter(Boolean).join(' / ')||'Tidak dinyatakan'],['TEMPOH REKOD',model.period]];
   for(let i=0;i<fields.length;i+=2){
     font(9.2);const cells=fields.slice(i,i+2).map(([label,value])=>({label,lines:profileLines(String(value),82)}));
     const height=8+Math.max(...cells.map(c=>c.lines.length))*4.4;ensure(height);

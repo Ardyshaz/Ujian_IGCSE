@@ -27,7 +27,10 @@
     "test:report:ui": "node scripts/qa/report.js",
     "check:report:pdf": "python scripts/validate/report-pdfs.py",
     "test:analytics:ui": "node scripts/qa/analytics.js",
-    "test:selection:ui": "node scripts/qa/question-selection.js"
+    "test:selection:ui": "node scripts/qa/question-selection.js",
+    "test:hall:ui": "node scripts/qa/hall-profile.js",
+    "hall:preview": "node scripts/operations/publish-hall.js",
+    "hall:publish": "node scripts/operations/publish-hall.js --publish"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^6.0.0",

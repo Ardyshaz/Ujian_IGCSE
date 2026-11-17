@@ -1,0 +1,41 @@
+import {readFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import {initializeTestEnvironment,assertSucceeds,assertFails} from '@firebase/rules-unit-testing';
+import {doc,setDoc,updateDoc,getDoc,getDocs,collection,query,limit,deleteDoc,writeBatch,serverTimestamp} from 'firebase/firestore';
+const env=await initializeTestEnvironment({projectId:'demo-kuiz-igcse',firestore:{host:'127.0.0.1',port:8080,rules:await readFile('firestore.rules','utf8')}});
+const owner=env.authenticatedContext('hall-owner').firestore(),stranger=env.authenticatedContext('hall-other').firestore(),guest=env.unauthenticatedContext().firestore();
+let checks=0;const ok=async p=>{checks++;await assertSucceeds(p);},no=async p=>{checks++;await assertFails(p);};
+const publicId='12345678-1234-1234-1234-123456789abc';
+const profile={id:'hall-child',ownerId:'hall-owner',display_name:'PRIVATE NAME',guardian_name:'PRIVATE GUARDIAN',school_name:'PRIVATE SCHOOL',year_level:'Year 6',createdAt:serverTimestamp()};
+const consent={ownerId:'hall-owner',publicId,alias:'Bintang Biru',version:1,guardianConfirmed:true,createdAt:serverTimestamp()};
+function enroll(db,extra={}){const batch=writeBatch(db);batch.set(doc(db,'hallConsents','hall-child'),{...consent,...extra});batch.set(doc(db,'hallOwners',publicId),{ownerId:'hall-owner',studentId:'hall-child',createdAt:serverTimestamp()});return batch.commit();}
+try{
+ await env.clearFirestore();
+ await ok(setDoc(doc(owner,'students','hall-child'),profile));
+ await ok(updateDoc(doc(owner,'students','hall-child'),{display_name:'New nickname',year_level:'Form 1',school_name:'SK Contoh',state:'Perak'}));
+ await no(updateDoc(doc(stranger,'students','hall-child'),{display_name:'Stolen'}));
+ await no(updateDoc(doc(guest,'students','hall-child'),{state:'Perak'}));
+ for(const change of [{ownerId:'hall-other'},{id:'changed'},{createdAt:serverTimestamp()},{admin:true},{state:'invalid'},{school_name:'s'.repeat(101)}])await no(updateDoc(doc(owner,'students','hall-child'),change));
+ await no(getDoc(doc(guest,'students','hall-child')));
+ await no(enroll(guest));await no(enroll(stranger));await no(enroll(owner,{guardianConfirmed:false}));await no(enroll(owner,{alias:'email@example'}));await no(enroll(owner,{alias:'0123456789'}));
+ await no(setDoc(doc(owner,'hallConsents','hall-child'),consent));
+ await ok(enroll(owner));
+ await ok(getDoc(doc(owner,'hallConsents','hall-child')));
+ await no(getDoc(doc(stranger,'hallConsents','hall-child')));await no(getDoc(doc(guest,'hallConsents','hall-child')));await no(getDocs(collection(owner,'hallConsents')));
+ await no(getDoc(doc(guest,'hallOwners',publicId)));await no(getDoc(doc(stranger,'hallOwners',publicId)));
+ await no(updateDoc(doc(owner,'hallConsents','hall-child'),{alias:'Changed'}));
+ await no(setDoc(doc(owner,'hallEntries',publicId),{alias:'Fake score'}));
+ await env.withSecurityRulesDisabled(async admin=>setDoc(doc(admin.firestore(),'hallEntries',publicId),{alias:'Bintang Biru',uniqueQuestions:30}));
+ await ok(getDoc(doc(guest,'hallEntries',publicId)));
+ await ok(getDocs(query(collection(guest,'hallEntries'),limit(30))));
+ await no(getDocs(collection(guest,'hallEntries')));await no(getDocs(query(collection(guest,'hallEntries'),limit(31))));
+ await no(updateDoc(doc(owner,'hallEntries',publicId),{uniqueQuestions:300}));
+ await no(deleteDoc(doc(stranger,'hallEntries',publicId)));await no(deleteDoc(doc(owner,'hallEntries',publicId)));
+ await no(deleteDoc(doc(owner,'hallConsents','hall-child')));await no(deleteDoc(doc(owner,'students','hall-child')));
+ const batch=writeBatch(owner);for(const[c,id]of [['hallEntries',publicId],['hallOwners',publicId],['hallConsents','hall-child']])batch.delete(doc(owner,c,id));await ok(batch.commit());
+ assert.equal((await getDoc(doc(guest,'hallEntries',publicId))).exists(),false);
+ await ok(enroll(owner));
+ const unpublished=writeBatch(owner);for(const[c,id]of [['hallEntries',publicId],['hallOwners',publicId],['hallConsents','hall-child']])unpublished.delete(doc(owner,c,id));await ok(unpublished.commit());
+ await ok(deleteDoc(doc(owner,'students','hall-child')));
+ console.log(`PASS: ${checks} Hall/profile security checks: optional atomic consent,public aggregates only,private ownership,no score writes,owner-only edits/withdrawal and deletion cleanup.`);
+}finally{await env.cleanup();}

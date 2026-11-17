@@ -16,3 +16,6 @@ Do not run init blindly over existing configuration. A Web API key is public con
 The default database is Native/Standard in nam5, created by the initial CLI deploy when no database existed. PITR and delete protection were disabled at verification; no Malaysia residency or automatic backup claim. Do not recreate/migrate data silently to change region. Preserve old family data locally; no automatic SQLite upload.
 
 Remaining hardening:independent teacher moderation,recoverable guardian accounts/consent,retention/privacy/terms review,cloud backup/restore drills,cost/quota/abuse/App Check controls,least-privilege admin publishing,additional browsers/physical devices and load/accessibility testing. [Roadmap](../../Task.md) and [validation](../testing/VALIDATION.md).
+
+
+Community release deploys reviewed Firestore rules as well as Hosting. No data migration or broad public profile read is required. Weekly publication is a separate privileged manual operation:npm run hall:preview,then npm run hall:publish after checking opted-in aliases. Hosting deploy alone does not fill the board or schedule updates. See [community operations](../features/COMMUNITY_AND_PROFILES.md).

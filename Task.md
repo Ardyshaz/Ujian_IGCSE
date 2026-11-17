@@ -83,3 +83,14 @@ Express routes, SQL schema/entities, SQLite migration/backup, server-side score/
 - [x]29 unit checks and extended emulator browser tests pass,including keyboard focus,180 terms,English/BM search,category filtering,Home navigation and desktop/mobile layouts.
 - [x] Final content/docs/repo and Analytics checks pass;Hosting deployed and five changed assets verified against tested source;documentation/source prepared for release commit and push.
 - [ ] Independent educator/terminology review and physical-device accessibility testing.
+
+
+## Optional community recognition and profile editing -18 November2026
+
+- [x] Add explicit guardian-directed alias enrollment,Home Top5 categories and achievement popup,with private consent/mapping and curated public aggregates.
+- [x] Add privileged manual publisher with bank/key/server-time validation,ownership filters,limited public fields and stale-consent commit preconditions;no hosted paid backend.
+- [x] Implement owner withdrawal,unpublished withdrawal and profile-delete cleanup;prevent direct client score publication.
+- [x] Add Edit profil under family sidebar/profile modal;editable nickname,guardian label,year,school,state while preserving IDs/ownership/attempts.
+- [x]36 unit tests,39 additional Hall/profile security assertions and end-to-end demo browser workflow pass;private PDF/JSON school/state regressions pass.
+- [x] Regression/content/docs/repository checks pass;rules and Hosting deployed;10 changed assets match tested source;production bounded public Hall read succeeds and four private collection queries deny unauthenticated access. Documentation/source included in release commit.
+- [ ] Review publication scheduling,guardian recovery,abuse controls and fairness;manual admin refresh is the MVP behavior.

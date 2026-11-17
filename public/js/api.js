@@ -19,6 +19,7 @@ async function handle(path,options={}){
  if(!ownerId)throw new Error(cloudError||'Firebase belum dihubungkan.');
  if(p[0]==='students'){
   if(method==='POST')return repo.createStudent(b);
+  if(method==='PATCH'&&p[1])return repo.updateStudent(p[1],b);
   if(method==='DELETE'){await repo.deleteStudent(p[1],b.confirmName);const all=sessions();for(const[id,q]of Object.entries(all))if(q.studentId===p[1])delete all[id];localStorage.setItem(key(),JSON.stringify(all));return{ok:true};}
   return p[1]?repo.getRecord('students',p[1]):repo.listRecords('students');
  }
