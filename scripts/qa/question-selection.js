@@ -30,10 +30,28 @@ try {
   assert.equal(evidence.due,3);assert.equal(evidence.unique,17);assert.equal(evidence.repeated,3);assert.equal(evidence.firstCorrect,7);assert.equal(evidence.repeatPercentage,100);assert.equal(evidence.unanswered,10);assert.equal(evidence.siblingTotal,0);assert.equal(evidence.dailySame,true);assert.deepEqual(evidence.mixed,[4,4,4]);
   await page.reload();await page.locator('.hero').waitFor();await page.goto('http://localhost:3000/#progress');await page.getByRole('heading',{name:'Soalan baharu dan latihan berulang'}).waitFor();
   assert.ok((await page.locator('main').innerText()).includes('10 betul / 0 salah / 10 tidak dijawab'));
-  await page.screenshot({path:join(output,'desktop-progress.png'),fullPage:true});
+  await page.getByRole('heading',{name:'Istilah Hari Ini',exact:true}).waitFor();
+  await page.getByRole('heading',{name:'Prestasi mengikut mod',exact:true}).waitFor();
+  assert.match(await page.locator('.mode-summary').innerText(),/50%/);
+  const before=await page.locator('[data-term-content] h3').innerText();
+  await page.getByRole('button',{name:'Istilah lain',exact:false}).click();
+  assert.notEqual(await page.locator('[data-term-content] h3').innerText(),before);
+  assert.equal(await page.getByRole('button',{name:'Istilah lain',exact:false}).evaluate(el=>el===document.activeElement),true);
+  await page.screenshot({path:join(output,'desktop-progress.png'),fullPage:false});
   await page.setViewportSize({width:390,height:844});await page.screenshot({path:join(output,'mobile-progress.png'),fullPage:true});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   await page.reload();await page.getByRole('heading',{name:'Soalan baharu dan latihan berulang'}).waitFor();
+  await page.locator('[data-glossary-spotlight] a').click();await page.locator('#glossary-search').waitFor();
+  assert.equal(await page.locator('.glossary-table tbody tr').count(),180);
+  await page.locator('#glossary-search').fill('Refraction');assert.equal(await page.locator('.glossary-table tbody tr').count(),1);
+  assert.match(await page.locator('#glossary-results').innerText(),/Pembiasan/);
+  await page.locator('#glossary-category').selectOption('Mathematics');assert.match(await page.locator('#glossary-results').innerText(),/Tiada istilah/);
+  await page.locator('#glossary-search').fill('serenjang');assert.equal(await page.locator('.glossary-table tbody tr').count(),1);
+  await page.setViewportSize({width:360,height:740});await page.screenshot({path:join(output,'mobile-glossary.png'),fullPage:false});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  await page.goto('http://localhost:3000/#home');await page.locator('.glossary-callout').waitFor();
+  await page.locator('.glossary-callout').click();await page.locator('#glossary-search').waitFor();
+
   await page.evaluate(async({profile,sibling})=>{const{api}=await import('/js/api.js');for(const p of [profile,sibling])await api(`/students/${p.id}`,{method:'DELETE',body:JSON.stringify({confirmName:p.display_name})});},evidence);
-  assert.deepEqual(errors,[]);console.log('PASS: history-aware selection (3 due/7 unseen),17 unique/3 repeated,first-v-repeat accuracy,blanks,sibling isolation,balanced mixed4/4/4,unchanged Daily set,Dashboard reload and390px no overflow. Evidence: '+output);
+  assert.deepEqual(errors,[]);console.log('PASS: history-aware selection (3 due/7 unseen),17 unique/3 repeated,first-v-repeat accuracy,blanks,sibling isolation,balanced mixed4/4/4,unchanged Daily set,Dashboard glossary hero/mode summary,next-term focus,180 terms,bilingual/category search,Home link,reload and360/390px no overflow. Evidence: '+output);
 }catch(error){await page.screenshot({path:join(output,'failure.png'),fullPage:true});console.log((await page.locator('body').innerText()).slice(-2200));throw error;}finally{await context.close();await browser.close();}

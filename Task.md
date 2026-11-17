@@ -73,3 +73,13 @@ Express routes, SQL schema/entities, SQLite migration/backup, server-side score/
 - [x] Preserve Daily sets,immutable snapshots,scoring,review flags,ownership and unchanged300-question bank.
 - [x] Integrated selection,quiz-review and PDF/JSON browser regressions passed;content/docs/repo checks passed;Hosting deployed and five changed JS modules verified byte-for-byte against tested source.
 - [ ] Calibrate difficulty and scheduling defaults with teacher/learner review; scale history queries as data grows.
+
+
+## Dashboard and glossary -17 November2026
+
+- [x] Highlight glossary in Dashboard hero and Home callout,with day-based term,accessible next action and searchable deep link.
+- [x] Expand100 to180 distinct original bilingual terms across five categories;review command-word and mathematics references.
+- [x] Add separate per-mode quiz averages and correct/wrong/blank counts;keep existing historic records and statistics.
+- [x]29 unit checks and extended emulator browser tests pass,including keyboard focus,180 terms,English/BM search,category filtering,Home navigation and desktop/mobile layouts.
+- [x] Final content/docs/repo and Analytics checks pass;Hosting deployed and five changed assets verified against tested source;documentation/source prepared for release commit and push.
+- [ ] Independent educator/terminology review and physical-device accessibility testing.

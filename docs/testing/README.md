@@ -37,3 +37,6 @@ Optional analytics QA:npm run test:analytics:ui requires local Auth/Firestore de
 
 
 npm run test:selection:ui verifies the history-aware engine against demo emulators:due/unseen shares,unique-versus-repeat metrics,sibling isolation,balanced mixed sets,unchanged Daily sets and Dashboard reload/mobile overflow. Unit selection tests are part of npm test.
+
+
+The selection UI suite also checks the Dashboard glossary hero,next-term keyboard focus,mode means,Home/deep-link navigation,all180 glossary rows,English/BM searches,combined category filters and360px glossary overflow. Unit tests validate glossary uniqueness/schema,daily-term bounds and per-mode denominators.

@@ -87,3 +87,6 @@ Analitik pilihan:integrasi GA4 diaktifkan untuk domain produksi selepas pemilik 
 
 
 Engine latihan mengutamakan soalan belum direkodkan dan ulang kaji kesilapan selepas24jam,dengan campuran subjek/Level mengikut bekalan soalan. Dashboard membezakan soalan unik daripada ulangan. [Cara pemilihan dan batasan](docs/features/LEARNING_ENGINE.md).
+
+
+Dashboard kini menonjolkan Istilah Hari Ini dan prestasi mengikut mod. Glosari mengandungi180 istilah English-BM dengan carian serta kategori. [Penerangan dan sumber](docs/features/DASHBOARD_GLOSSARY.md).

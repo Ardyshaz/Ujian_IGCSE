@@ -1,3 +1,4 @@
+import {glossarySpotlight,nextGlossaryTerm,glossaryCallout} from './glossary-spotlight.js';
 import { api, post, exportStudent } from './api.js';
 import { escapeHtml as h, icon, icons, title, percent, date, datetime, duration, subjectIcon, empty, toast, dialog, closeDialog, dialogHeader, performanceLabel, milestoneLabel, questionTypeLabel } from './ui.js';
 import { studentGuide, parentGuide, about, glossaryRows } from './guides.js';
@@ -66,6 +67,7 @@ function home() {
   return `${boot.cloudError?`<div class="alert warning" role="status">${h(boot.cloudError)}</div>`:''}<h1>Persediaan ke MRSM IGCSE bermula di sini.</h1><p class="subtitle">${learner?`Selamat kembali, ${h(learner.display_name)}. `:''}Bina keyakinan anak anda, satu soalan pada satu masa.</p>
   <section class="hero"><div><h2>Pilih Subjek Anda</h2><p>Pilih subjek di bawah untuk mula buat latihan dan ulang kaji.</p></div><button class="button" data-action="start">Mula Ulang Kaji ${icon('arrow-right')}</button></section>
   ${analyticsChoiceMarkup()}
+  ${glossaryCallout()}
   ${homeGuide()}
   ${stats?.active.length?`<div class="alert"><strong>Ada kuiz yang belum selesai.</strong> Jawapan yang disimpan masih tersedia. <a href="#session/${stats.active[0].id}">Sambung ${h(title(stats.active[0].mode))}</a></div>`:''}
   <div class="learning-grid"><section><div class="section-header"><h2>Latih Tubi Subjek</h2></div><div class="subject-list">${subjectRows()}</div></section><section class="panel daily"><div><h2 class="icon-heading">${icon('target')}Cabaran Harian (Daily Challenge)</h2><p>8 soalan campuran<br>English, Mathematics dan Science</p>${stats?.dailyComplete?'<p class="review-status">Selesai untuk hari ini. Bagus!</p>':'<p>Rutin kecil untuk membina keyakinan.</p>'}</div><button class="button" data-action="daily">${stats?.dailyComplete?'Cuba semula set hari ini':'Mula Cabaran Harian'} ${icon('arrow-right')}</button></section></div>
@@ -201,7 +203,9 @@ function progress() {
   const s=stats;
   const trend=s.history.slice(0,12).reverse();
   return `<h1>Dashboard Prestasi Saya</h1><p class="subtitle">${h(learner.display_name)} — rekod pembelajaran untuk pelajar dan ibu bapa.</p>
+  <div class="dashboard-hero">${glossarySpotlight()}<section class="panel next-session"><span class="eyebrow">LANGKAH SETERUSNYA</span><h2>Sedikit latihan, lebih faham.</h2>${s.weakTopics.length?`<p>Mulakan dengan <strong>${h(s.weakTopics[0].name)}</strong>. Baca satu penerangan, kemudian cuba terangkan semula.</p><button class="button dark" data-topic-practice="${h(s.weakTopics[0].topic_id)}" data-topic-subject="${h(s.weakTopics[0].subject_id)}">Latih topik ini ${icon('arrow-right')}</button>`:`<p>${s.total?'Teruskan meneroka soalan baharu. Cadangan topik muncul apabila rekod soalan unik mencukupi.':'Mulakan dengan set pendek tanpa pemasa. Ambil masa untuk memahami soalan.'}</p><a class="button dark" href="#quiz">Mula latihan ${icon('arrow-right')}</a>`}<p class="small muted next-session-note">Markah ialah panduan belajar. Ia bukan ramalan keputusan ujian kemasukan.</p></section></div>
   <div class="stats">${[['Kuiz selesai',s.total],['Purata markah',percent(s.average)],['Markah terbaik',percent(s.best)],['Hari berturut-turut',`${s.streak} hari`]].map(([label,value])=>`<div class="panel stat"><span>${label}</span><strong>${value}</strong></div>`).join('')}</div>
+  <section class="panel mode-summary"><div class="section-header"><h2>Prestasi mengikut mod</h2><span class="small muted">Purata bagi setiap kuiz</span></div><p class="small muted">Practice membenarkan semakan semasa latihan. Bandingkan Exam secara berasingan; bilangan soalan dan Level juga boleh berbeza.</p><div class="mode-summary-grid">${s.byMode.map(m=>`<article><h3>${h(title(m.mode))}</h3><strong>${percent(m.average)}</strong><p>${m.count} kuiz selesai</p><small>${m.correct} betul / ${m.incorrect} salah / ${m.unanswered} tidak dijawab</small></article>`).join('')}</div></section>
   <div class="split"><section class="panel"><h2>Prestasi mengikut subjek</h2><p class="small muted">Ketepatan berdasarkan jawapan pertama yang disimpan, termasuk set campuran.</p>${s.subjects.map(subject=>`<div class="chart-row"><span>${title(subject.id)}</span><div class="chart-bar" aria-hidden="true"><span class="${subject.id}" style="width:${subject.percentage||0}%"></span></div><strong>${percent(subject.percentage)}</strong></div><p class="sr-only">${title(subject.id)}: ${subject.count} soalan, ${subject.correct} betul, ${percent(subject.percentage)}.</p>`).join('')}
   <p class="small muted">Setiap jawapan berulang turut dikira dalam bar subjek di atas.</p><h3 style="margin-top:28px">Fokus latihan seterusnya</h3>${s.weakTopics.length? s.weakTopics.slice(0,4).map(t=>`<div class="history-row"><span class="small">${h(t.name)} · ${percent(t.percentage)}<br><small>${t.question_count} soalan unik / jawapan terkini</small></span><button class="button secondary small" data-topic-practice="${h(t.topic_id)}" data-topic-subject="${h(t.subject_id)}">Latih tubi</button></div>`).join(''):'<p class="small muted">Cadangan memerlukan sekurang-kurangnya tiga soalan unik bagi sesuatu topik. Jawapan berulang pada satu soalan tidak menambah bukti baharu. Teruskan meneroka dahulu.</p>'}
   ${s.strongTopics.length?`<div class="alert success"><strong>Topik dengan ketepatan terkini sekurang-kurangnya 80% (minimum 3 soalan unik):</strong> ${s.strongTopics.map(t=>h(t.name)).join(', ')}.</div>`:''}</section>
@@ -264,6 +268,7 @@ async function handleClick(event) {
     if(action==='support')showSupport();
     if(action==='feedback')showFeedback();
     if(action==='analytics-privacy')showAnalyticsPrivacy();
+    if(action==='glossary-next')nextGlossaryTerm(element);
     if(action==='menu'){const open=document.querySelector('#sidebar').classList.toggle('open');element.setAttribute('aria-expanded',String(open));}
     if(action==='profiles')profiles();
     if(action==='start')go('quiz');

@@ -132,3 +132,15 @@ No new collection,Firestore rule/index,Authentication setting,Analytics event or
 Hosting-only publication completed successfully. HTTP SHA-256 checks confirmed question-selection.js,quiz-engine.js,api.js,app.js and report.js exactly match the tested local source. Content/current-doc/staged-repository checks passed;the immutable provenance checksums remain intact. No production learner writes were used for deployment verification. Companion docs,Task.md and the synthetic PDF example were updated.
 
 Separate Analytics follow-up:owner-authorised read-only Console Home inspection on17 November2026 showed populated usage metrics and a populated realtime card,confirming actual GA4 ingestion beyond prior intercepted transport tests. Private aggregate counts/screenshots were not committed. Property privacy settings were not changed or independently reverified.
+
+
+## Dashboard and glossary release -17 November2026
+
+29/29 unit tests passed. New checks cover180 distinct complete bilingual entries and valid categories,deterministic daily-term bounds,and mode-specific equal-quiz means with distinct wrong/blank counts and null empty states. Original300-question content validation passed with no question-bank edits. Current-document link/case validation passed47 documents.
+
+Extended disposable demo-emulator browser workflow passed all prior selection/history checks plus Dashboard Istilah Hari Ini hero and next-session area,per-mode mean,next-term content change with button focus preserved,all180 glossary rows,Refraction/Pembiasan search,combined Mathematics/category empty result,serenjang/Perpendicular search,Home callout and glossary deep link. No page runtime errors;1440px desktop and390px Dashboard/360px glossary screenshots reviewed at OS temp igcse-selection-BJRqml. The existing host structured-browser blocker remains,so isolated Playwright regression was used;physical Android behavior is not claimed. Test fixtures are synthetic and cleaned on successful completion;no real child records were accessed.
+
+The existing mocked Analytics UI regression also passed:default/deny/reload import gate,first-visit choices,allow,filtering,withdrawal,cookies,cross-tab and360/390px checks. No new Analytics event or consent change was added. English-BM glossary definitions/examples are original editorial teaching content;Cambridge command-word and NZ Curriculum mathematics references were checked17 November2026. No independent educator/translation moderation is claimed.
+
+
+Dashboard/glossary Hosting-only deployment completed. HTTP SHA-256 comparisons verified the live glossary-spotlight.js,guides.js,app.js,quiz-engine.js and style.css match the tested source. Staged repository scan passed109 source paths with original archive checksums intact and private/generated files excluded. Source and all seven project companion documents,full_prompt.md,Task.md,the feature guide and validation records were updated together. No production learner records were written for verification.
