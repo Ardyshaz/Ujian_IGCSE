@@ -94,3 +94,13 @@ Express routes, SQL schema/entities, SQLite migration/backup, server-side score/
 - [x]36 unit tests,39 additional Hall/profile security assertions and end-to-end demo browser workflow pass;private PDF/JSON school/state regressions pass.
 - [x] Regression/content/docs/repository checks pass;rules and Hosting deployed;10 changed assets match tested source;production bounded public Hall read succeeds and four private collection queries deny unauthenticated access. Documentation/source included in release commit.
 - [ ] Review publication scheduling,guardian recovery,abuse controls and fairness;manual admin refresh is the MVP behavior.
+
+
+## Automatic Wall Of Excellence -18 November2026
+
+- [x] Use final requested name Wall Of Excellence Minggu Ini throughout active UI.
+- [x] Replace checkbox/manual publication with automatic random aliases and tightly scoped self-reported summaries;no private-name derivation or bulk old-profile publication.
+- [x] Add persistent hide/resume,unchanged-summary suppression,stale-client protection and deletion cleanup.
+- [x] Add5 global per-category Top5 indexes;test beyond30 public entries.
+- [x]37 unit tests and113 rules assertions pass;automatic Hall,quiz,Dashboard/glossary and Analytics browser regressions pass;5 indexes confirmed READY;rules/Hosting deployed;6 assets and5 indexed public queries verified read-only,with4 private collection queries denied. Updated documentation/source included in release commit.
+- [ ] Consider a separately approved trusted backend if independently verified public assessments are needed;current summaries remain self-reported practice.

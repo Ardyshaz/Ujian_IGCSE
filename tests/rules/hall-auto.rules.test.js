@@ -1,0 +1,33 @@
+import {readFile} from 'node:fs/promises';
+import {initializeTestEnvironment,assertSucceeds,assertFails} from '@firebase/rules-unit-testing';
+import {doc,setDoc,getDoc,updateDoc,writeBatch,serverTimestamp,Timestamp,deleteDoc} from 'firebase/firestore';
+const env=await initializeTestEnvironment({projectId:'demo-kuiz-igcse',firestore:{host:'127.0.0.1',port:8080,rules:await readFile('firestore.rules','utf8')}});
+const a=env.authenticatedContext('auto-owner').firestore(),b=env.authenticatedContext('other').firestore();
+let checks=0;const ok=async p=>{checks++;await assertSucceeds(p);},no=async p=>{checks++;await assertFails(p);};
+const id='12345678-1234-1234-1234-123456789abc',alias='Pelajar 123456';
+const pref={ownerId:'auto-owner',publicId:id,alias,version:2,enabled:true,createdAt:serverTimestamp()};
+const low={count:0,correct:null,accuracy:null};
+const data={alias,weekStart:'2026-11-16',uniqueQuestions:30,activeDays:1,subjects:{english:{count:30,correct:30,accuracy:100},mathematics:low,science:low},version:2,source:'self_reported',explorerScore:30,consistencyScore:1,englishScore:100,mathematicsScore:-1,scienceScore:-1,publishedAt:serverTimestamp(),expiresAt:Timestamp.fromMillis(Date.now()+86400000)};
+try{
+ await env.clearFirestore();
+ await ok(setDoc(doc(a,'students','child'),{id:'child',ownerId:'auto-owner',display_name:'PRIVATE',guardian_name:'',year_level:'Year 6',school_name:'PRIVATE',createdAt:serverTimestamp()}));
+ let batch=writeBatch(a);batch.set(doc(a,'hallConsents','child'),pref);batch.set(doc(a,'hallOwners',id),{ownerId:'auto-owner',studentId:'child',createdAt:serverTimestamp()});await ok(batch.commit());
+ await ok(setDoc(doc(a,'hallEntries',id),data));
+ await no(setDoc(doc(b,'hallEntries',id),data));
+ await no(setDoc(doc(a,'hallEntries',id),{...data,alias:'PRIVATE NAME'}));
+ await no(setDoc(doc(a,'hallEntries',id),{...data,school_name:'PRIVATE'}));
+ await no(setDoc(doc(a,'hallEntries',id),{...data,ownerId:'auto-owner'}));
+ await no(setDoc(doc(a,'hallEntries',id),{...data,uniqueQuestions:301,explorerScore:301}));
+ await no(setDoc(doc(a,'hallEntries',id),{...data,activeDays:8,consistencyScore:8}));
+ await no(setDoc(doc(a,'hallEntries',id),{...data,englishScore:99}));
+ await no(setDoc(doc(a,'hallEntries',id),{...data,subjects:{...data.subjects,english:{count:30,correct:15,accuracy:100}}}));
+ await no(setDoc(doc(a,'hallEntries',id),{...data,subjects:{...data.subjects,science:{count:1,correct:1,accuracy:100}},scienceScore:100}));
+ await no(updateDoc(doc(a,'hallConsents','child'),{alias:'My real name'}));
+ await no(updateDoc(doc(a,'hallConsents','child'),{enabled:false}));
+ batch=writeBatch(a);batch.update(doc(a,'hallConsents','child'),{enabled:false});batch.delete(doc(a,'hallEntries',id));await ok(batch.commit());
+ await no(setDoc(doc(a,'hallEntries',id),data));
+ await ok(updateDoc(doc(a,'hallConsents','child'),{enabled:true}));await ok(setDoc(doc(a,'hallEntries',id),data));
+ batch=writeBatch(a);batch.delete(doc(a,'hallEntries',id));batch.delete(doc(a,'hallOwners',id));batch.delete(doc(a,'hallConsents','child'));await ok(batch.commit());
+ await ok(deleteDoc(doc(a,'students','child')));
+ console.log(`PASS: ${checks} automatic Hall privacy/schema/ownership/visibility checks; no public real-name or private-field writes.`);
+}finally{await env.cleanup();}

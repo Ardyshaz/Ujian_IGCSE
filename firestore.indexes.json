@@ -1,5 +1,136 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "hallEntries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "weekStart",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "explorerScore",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "uniqueQuestions",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "activeDays",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "hallEntries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "weekStart",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "consistencyScore",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "uniqueQuestions",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "activeDays",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "hallEntries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "weekStart",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "englishScore",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "uniqueQuestions",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "activeDays",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "hallEntries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "weekStart",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "mathematicsScore",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "uniqueQuestions",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "activeDays",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "hallEntries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "weekStart",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "scienceScore",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "uniqueQuestions",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "activeDays",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
   "fieldOverrides": [
     {
       "collectionGroup": "attempts",

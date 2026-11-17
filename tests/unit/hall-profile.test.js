@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {hallWeek,buildHallEntries,prepareHallAttempts,validHallAlias} from '../../public/js/hall-policy.js';
+import {hallWeek,buildHallEntries,prepareHallAttempts,validHallAlias,automaticHallAlias,automaticHallData} from '../../public/js/hall-policy.js';
 import {profileFields} from '../../public/js/profile-fields.js';
 const now=Date.parse('2026-11-18T04:00:00Z');
 const consent=(id)=>({id,ownerId:id,publicId:`00000000-0000-4000-8000-00000000000${id}`,alias:`Bintang ${id}`,version:1,guardianConfirmed:true});
@@ -48,4 +48,13 @@ test('profile fields support private school/state, preserve omission, and reject
  assert.equal(p.display_name,'Bintang');assert.equal(p.state,'Perak');assert.equal(profileFields({displayName:'A'}).state,'');
  assert.throws(()=>profileFields({displayName:'A',state:'invalid'}));assert.throws(()=>profileFields({displayName:''}));
  assert.ok(validHallAlias('Bintang Biru'));assert.ok(!validHallAlias('email@example'));assert.ok(!validHallAlias('0123456789'));
+});
+test('automatic summaries use opaque aliases including numeric codes and never copy profile names',()=>{
+ const publicId='12345678-1234-1234-1234-123456789abc';
+ const pref={id:'a',ownerId:'a',publicId,alias:automaticHallAlias(publicId),version:2,enabled:true};
+ const bank=Array.from({length:30},(_,i)=>q(String(i)));
+ const data=automaticHallData(pref,{id:'a',ownerId:'a',display_name:'PRIVATE NAME'},[attempt('r',bank)],bank,now);
+ assert.equal(data.alias,'Pelajar 123456');assert.equal(data.englishScore,100);assert.equal(data.source,'self_reported');
+ assert.ok(!JSON.stringify(data).includes('PRIVATE NAME'));assert.ok(!('ranks'in data)&&!('ownerId'in data));
+ assert.equal(automaticHallData({...pref,enabled:false},{id:'a',ownerId:'a'},[attempt('r',bank)],bank,now),null);
 });

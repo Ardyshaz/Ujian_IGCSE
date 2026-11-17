@@ -92,4 +92,4 @@ Engine latihan mengutamakan soalan belum direkodkan dan ulang kaji kesilapan sel
 Dashboard kini menonjolkan Istilah Hari Ini dan prestasi mengikut mod. Glosari mengandungi180 istilah English-BM dengan carian serta kategori. [Penerangan dan sumber](docs/features/DASHBOARD_GLOSSARY.md).
 
 
-Edit profil kini tersedia di bawah Profil keluarga untuk nama,tahap,sekolah dan negeri pilihan. Bintang Pembelajaran di Home hanya memaparkan nama panggilan/pencapaian yang disertai secara pilihan;ranking dikemas kini admin melalui npm run hall:preview dan npm run hall:publish. Tiada profil lama diterbitkan secara automatik. [Panduan ciri dan operasi](docs/features/COMMUNITY_AND_PROFILES.md).
+Edit profil kini tersedia di bawah Profil keluarga untuk nama,tahap,sekolah dan negeri pilihan. Wall Of Excellence Minggu Ini di Home memaparkan alias rawak dan ringkasan latihan kendiri secara automatik apabila profil digunakan. Tiada checkbox penjaga atau kemas kini admin diperlukan. Nama sebenar,sekolah dan negeri tidak dipaparkan;paparan boleh disembunyikan. Ranking ini bukan penilaian yang disahkan. [Panduan ciri dan operasi](docs/features/COMMUNITY_AND_PROFILES.md).

@@ -89,21 +89,67 @@ service cloud.firestore {
   }
   match /hallConsents/{studentId} {
    allow get: if signedIn() && (!exists(/databases/$(database)/documents/hallConsents/$(studentId)) || owner(resource.data));
-   allow list, update: if false;
+   allow list: if false;
+   allow update: if owner(resource.data) && validAutoPreference(request.resource.data,studentId)
+    && request.resource.data.publicId == resource.data.publicId
+    && request.resource.data.createdAt == resource.data.createdAt
+    && (resource.data.version == 1 || request.resource.data.alias == resource.data.alias)
+    && (request.resource.data.enabled || !existsAfter(/databases/$(database)/documents/hallEntries/$(resource.data.publicId)));
    allow create: if owner(request.resource.data)
     && get(/databases/$(database)/documents/students/$(studentId)).data.ownerId == request.auth.uid
-    && request.resource.data.keys().hasAll(['ownerId','publicId','alias','version','guardianConfirmed','createdAt'])
+    && ((validAutoPreference(request.resource.data,studentId)) || (
+    request.resource.data.keys().hasAll(['ownerId','publicId','alias','version','guardianConfirmed','createdAt'])
     && request.resource.data.keys().hasOnly(['ownerId','publicId','alias','version','guardianConfirmed','createdAt'])
     && request.resource.data.publicId is string && request.resource.data.publicId.matches('^[a-f0-9-]{36}$')
     && request.resource.data.alias is string && request.resource.data.alias.size() >= 2 && request.resource.data.alias.size() <= 24
     && !request.resource.data.alias.matches('.*[@<>/\\\\].*') && !request.resource.data.alias.matches('.*[0-9]{5}.*')
     && request.resource.data.version == 1 && request.resource.data.guardianConfirmed == true
+    && request.resource.data.createdAt == request.time))
     && request.resource.data.createdAt == request.time
     && getAfter(/databases/$(database)/documents/hallOwners/$(request.resource.data.publicId)).data.ownerId == request.auth.uid
     && getAfter(/databases/$(database)/documents/hallOwners/$(request.resource.data.publicId)).data.studentId == studentId;
    allow delete: if owner(resource.data)
     && !existsAfter(/databases/$(database)/documents/hallOwners/$(resource.data.publicId))
     && !existsAfter(/databases/$(database)/documents/hallEntries/$(resource.data.publicId));
+  }
+  function validAutoPreference(data,studentId) {
+   return owner(data)
+    && get(/databases/$(database)/documents/students/$(studentId)).data.ownerId == request.auth.uid
+    && data.keys().hasAll(['ownerId','publicId','alias','version','enabled','createdAt'])
+    && data.keys().hasOnly(['ownerId','publicId','alias','version','enabled','createdAt'])
+    && data.publicId is string && data.publicId.matches('^[a-f0-9-]{36}$')
+    && data.alias is string && data.alias.matches('^Pelajar [A-F0-9]{6}$')
+    && data.version == 2 && data.enabled is bool;
+  }
+  function validHallSubject(data) {
+   let expected = data.count >= 30 ? 100.0 * data.correct / data.count : 0;
+   return data.keys().hasAll(['count','correct','accuracy']) && data.keys().hasOnly(['count','correct','accuracy'])
+    && data.count is int && data.count >= 0 && data.count <= 100
+    && (data.count < 30 ? data.correct == null && data.accuracy == null
+        : data.correct is int && data.correct >= 0 && data.correct <= data.count
+          && data.accuracy is number && data.accuracy >= 0 && data.accuracy <= 100
+          && data.accuracy >= expected - 0.051 && data.accuracy <= expected + 0.051);
+  }
+  function validHallEntry(data,publicId) {
+   let link = get(/databases/$(database)/documents/hallOwners/$(publicId)).data;
+   let preference = getAfter(/databases/$(database)/documents/hallConsents/$(link.studentId)).data;
+   return signedIn() && link.ownerId == request.auth.uid && preference.ownerId == request.auth.uid
+    && preference.publicId == publicId && preference.version == 2 && preference.enabled == true
+    && data.alias == preference.alias && data.alias.matches('^Pelajar [A-F0-9]{6}$')
+    && data.keys().hasAll(['alias','weekStart','uniqueQuestions','activeDays','subjects','version','source','explorerScore','consistencyScore','englishScore','mathematicsScore','scienceScore','publishedAt','expiresAt'])
+    && data.keys().hasOnly(['alias','weekStart','uniqueQuestions','activeDays','subjects','version','source','explorerScore','consistencyScore','englishScore','mathematicsScore','scienceScore','publishedAt','expiresAt'])
+    && data.version == 2 && data.source == 'self_reported'
+    && data.weekStart is string && data.weekStart.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+    && data.uniqueQuestions is int && data.uniqueQuestions >= 1 && data.uniqueQuestions <= 300
+    && data.activeDays is int && data.activeDays >= 1 && data.activeDays <= 7
+    && data.explorerScore == data.uniqueQuestions && data.consistencyScore == data.activeDays
+    && data.subjects.keys().hasAll(['english','mathematics','science']) && data.subjects.keys().hasOnly(['english','mathematics','science'])
+    && validHallSubject(data.subjects.english) && validHallSubject(data.subjects.mathematics) && validHallSubject(data.subjects.science)
+    && data.englishScore == (data.subjects.english.count >= 30 ? data.subjects.english.accuracy : -1)
+    && data.mathematicsScore == (data.subjects.mathematics.count >= 30 ? data.subjects.mathematics.accuracy : -1)
+    && data.scienceScore == (data.subjects.science.count >= 30 ? data.subjects.science.accuracy : -1)
+    && data.publishedAt == request.time && data.expiresAt is timestamp
+    && data.expiresAt > request.time && data.expiresAt <= request.time + duration.value(7,'d');
   }
   match /hallOwners/{publicId} {
    allow get: if owner(resource.data);
@@ -123,11 +169,9 @@ service cloud.firestore {
    // Only curated, consented aggregate fields are published by CLI IAM, never raw learner records.
    allow get: if true;
    allow list: if request.query.limit != null && request.query.limit <= 30;
-   allow create, update: if false;
+   allow create, update: if validHallEntry(request.resource.data,publicId);
    allow delete: if signedIn()
-    && get(/databases/$(database)/documents/hallOwners/$(publicId)).data.ownerId == request.auth.uid
-    && !existsAfter(/databases/$(database)/documents/hallOwners/$(publicId))
-    && !existsAfter(/databases/$(database)/documents/hallConsents/$(get(/databases/$(database)/documents/hallOwners/$(publicId)).data.studentId));
+    && get(/databases/$(database)/documents/hallOwners/$(publicId)).data.ownerId == request.auth.uid;
   }
   match /{document=**} { allow read,write: if false; }
  }

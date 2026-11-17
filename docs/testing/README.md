@@ -43,3 +43,6 @@ The selection UI suite also checks the Dashboard glossary hero,next-term keyboar
 
 
 npm run test:hall:ui exercises synthetic profile editing/enrollment,the actual emulator admin publisher,category/detail/mobile views,private-field exclusion,withdrawal/stale-commit rejection and profile deletion cleanup. npm run test:rules includes39 Hall/profile assertions in addition to existing31 owner/score and23 feedback assertions. Run rules suites before browser QA because they clear only the demo database. No real child is enrolled by these tests.
+
+
+Automatic v2 Hall QA now exercises no-checkbox sync,opaque aliases,Top5 with35 extra synthetic public projections,persistent hide/resume and private-profile editing/deletion. Legacy39 Hall rules checks remain for compatibility;the new automatic suite adds20 schema/ownership/visibility checks. All rules suites clear only the demo database and should precede browser tests.

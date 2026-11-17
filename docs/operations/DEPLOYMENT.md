@@ -19,3 +19,6 @@ Remaining hardening:independent teacher moderation,recoverable guardian accounts
 
 
 Community release deploys reviewed Firestore rules as well as Hosting. No data migration or broad public profile read is required. Weekly publication is a separate privileged manual operation:npm run hall:preview,then npm run hall:publish after checking opted-in aliases. Hosting deploy alone does not fill the board or schedule updates. See [community operations](../features/COMMUNITY_AND_PROFILES.md).
+
+
+Automatic v2 release supersedes the manual publisher instructions above. Deploy five reviewed firestore:indexes and wait until READY before releasing Hosting/rules for ranked queries. The runtime synchronizes opaque owner summaries;hall:publish is retired. No private profile bulk backfill is part of deployment. See the current community/profile feature guide.

@@ -1,3 +1,4 @@
+import {syncAutomaticHall} from './hall-service.js';
 // Client service adapter, not an HTTP API. Firebase Web SDK owns cloud persistence.
 import * as repo from './repository.js';
 import {connectFirebase,firebaseMessage} from './firebase.js';
@@ -23,7 +24,7 @@ async function handle(path,options={}){
   if(method==='DELETE'){await repo.deleteStudent(p[1],b.confirmName);const all=sessions();for(const[id,q]of Object.entries(all))if(q.studentId===p[1])delete all[id];localStorage.setItem(key(),JSON.stringify(all));return{ok:true};}
   return p[1]?repo.getRecord('students',p[1]):repo.listRecords('students');
  }
- if(p[0]==='dashboard'){await repo.getRecord('students',p[1]);const results=await repo.listRecords('attempts',p[1]);return dashboard(results,Object.values(sessions()).filter(q=>q.studentId===p[1]&&q.status==='in_progress'&&!results.some(r=>r.id===q.id)).map(q=>({id:q.id,mode:q.mode,started_at:q.startedAt})));}
+ if(p[0]==='dashboard'){await repo.getRecord('students',p[1]);const results=await repo.listRecords('attempts',p[1]);void syncAutomaticHall(p[1],results,rows);return dashboard(results,Object.values(sessions()).filter(q=>q.studentId===p[1]&&q.status==='in_progress'&&!results.some(r=>r.id===q.id)).map(q=>({id:q.id,mode:q.mode,started_at:q.startedAt})));}
  if(p[0]==='attempts')return repo.getRecord('attempts',p[1]);
  if(p[0]==='quizzes'){
   if(p[1]==='start'){

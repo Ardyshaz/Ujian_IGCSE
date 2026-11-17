@@ -30,12 +30,12 @@ try{
  await ok(getDocs(query(collection(guest,'hallEntries'),limit(30))));
  await no(getDocs(collection(guest,'hallEntries')));await no(getDocs(query(collection(guest,'hallEntries'),limit(31))));
  await no(updateDoc(doc(owner,'hallEntries',publicId),{uniqueQuestions:300}));
- await no(deleteDoc(doc(stranger,'hallEntries',publicId)));await no(deleteDoc(doc(owner,'hallEntries',publicId)));
+ await no(deleteDoc(doc(stranger,'hallEntries',publicId)));await ok(deleteDoc(doc(owner,'hallEntries',publicId)));
  await no(deleteDoc(doc(owner,'hallConsents','hall-child')));await no(deleteDoc(doc(owner,'students','hall-child')));
  const batch=writeBatch(owner);for(const[c,id]of [['hallEntries',publicId],['hallOwners',publicId],['hallConsents','hall-child']])batch.delete(doc(owner,c,id));await ok(batch.commit());
  assert.equal((await getDoc(doc(guest,'hallEntries',publicId))).exists(),false);
  await ok(enroll(owner));
  const unpublished=writeBatch(owner);for(const[c,id]of [['hallEntries',publicId],['hallOwners',publicId],['hallConsents','hall-child']])unpublished.delete(doc(owner,c,id));await ok(unpublished.commit());
  await ok(deleteDoc(doc(owner,'students','hall-child')));
- console.log(`PASS: ${checks} Hall/profile security checks: optional atomic consent,public aggregates only,private ownership,no score writes,owner-only edits/withdrawal and deletion cleanup.`);
+ console.log(`PASS: ${checks} Hall/profile security checks: legacy consent privacy,public aggregates,private ownership,no legacy score writes,owner-only edits/withdrawal and deletion cleanup.`);
 }finally{await env.cleanup();}
