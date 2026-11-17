@@ -1,7 +1,8 @@
 // Client service adapter, not an HTTP API. Firebase Web SDK owns cloud persistence.
 import * as repo from './repository.js';
 import {connectFirebase,firebaseMessage} from './firebase.js';
-import {localDay,isCorrect,shuffle,grade,dashboard} from './quiz-engine.js';
+import {selectQuestions} from './question-selection.js';
+import {localDay,isCorrect,grade,dashboard} from './quiz-engine.js';
 let bankPromise,ownerId,cloudError;
 const bank=()=>bankPromise ||= fetch('/questions.json').then(r=>{if(!r.ok)throw new Error('Bank Soalan belum dapat dimuatkan.');return r.json();}).then(rows=>rows.filter(q=>q.status==='published').map(q=>({...q,topicId:`${q.subject}:${q.topic.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`})));
 const subjects=rows=>['english','mathematics','science'].map(id=>({id,name:{english:'English',mathematics:'Mathematics',science:'Science'}[id],count:rows.filter(q=>q.subject===id).length}));
@@ -31,7 +32,7 @@ async function handle(path,options={}){
    if(!Number.isInteger(count)||count<1||count>50||!Number.isFinite(seconds)||seconds<10||seconds>600)throw new Error('Tetapan bilangan atau masa tidak sah.');
    let pool=rows.filter(q=>(!b.subject||b.subject==='mixed'||q.subject===b.subject)&&(!b.topic||q.topicId===b.topic)&&(!b.difficulty||q.difficulty===Number(b.difficulty))&&(b.mode!=='challenge'||b.difficulty||q.difficulty>=3)&&(!b.questionIds||b.questionIds.includes(q.id))),chosen;
    if(b.mode==='daily'){const hash=t=>[...t].reduce((n,c)=>Math.imul(n^c.charCodeAt(0),16777619)>>>0,2166136261);pool=[...rows].sort((a,c)=>hash(localDay()+a.id)-hash(localDay()+c.id));chosen=['english','mathematics','science'].flatMap(id=>pool.filter(q=>q.subject===id).slice(0,id==='science'?2:3));}
-   else{if(pool.length<count)throw new Error(`Hanya ${pool.length} soalan sepadan. Kurangkan bilangan soalan.`);chosen=shuffle(pool).slice(0,count);}
+   else{if(pool.length<count)throw new Error(`Hanya ${pool.length} soalan sepadan. Kurangkan bilangan soalan.`);const results=await repo.listRecords('attempts',b.studentId);chosen=selectQuestions(pool,{count,results,studentId:b.studentId});}
    const now=Date.now();return store({id:crypto.randomUUID(),studentId:b.studentId,mode:b.mode,subject:b.mode==='daily'?'mixed':b.subject||'mixed',status:'in_progress',startedAt:now,serverNow:now,deadlineAt:b.mode==='examination'||b.mode==='challenge'||b.timed?now+chosen.length*seconds*1000:null,dailyDate:b.mode==='daily'?localDay():null,questions:chosen,drafts:{}});
   }
   const q=sessions()[p[1]];if(!q)throw new Error('Draf tidak ditemui dalam pelayar ini. Keputusan yang selesai ada di Prestasi Saya.');

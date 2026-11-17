@@ -84,3 +84,6 @@ Lesen vendor disertakan bersama jsPDF, Lucide dan Noto Sans. Tiada lesen baharu 
 
 
 Analitik pilihan:integrasi GA4 diaktifkan untuk domain produksi selepas pemilik mengesahkan Enhanced Measurement OFF. Tiada SDK Analytics dimuatkan sebelum persetujuan penjaga; pengguna boleh menolak atau mematikannya melalui Privasi Analitik. [Dasar dan status](docs/features/ANALYTICS.md).
+
+
+Engine latihan mengutamakan soalan belum direkodkan dan ulang kaji kesilapan selepas24jam,dengan campuran subjek/Level mengikut bekalan soalan. Dashboard membezakan soalan unik daripada ulangan. [Cara pemilihan dan batasan](docs/features/LEARNING_ENGINE.md).

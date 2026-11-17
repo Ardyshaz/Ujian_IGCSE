@@ -34,3 +34,6 @@ npm run check:report:pdf requires Python pypdf and PyMuPDF and reads the generat
 
 
 Optional analytics QA:npm run test:analytics:ui requires local Auth/Firestore demo emulators and the static app. Analytics transport is mocked and the config response is overridden in the isolated context; no metrics are collected by Google. The owner confirmed Enhanced Measurement OFF and the production gate is enabled; individual consent is still required. Policy tests are included in npm test. Real SDK/intercepted transport and actual Realtime ingestion are distinct evidence scopes.
+
+
+npm run test:selection:ui verifies the history-aware engine against demo emulators:due/unseen shares,unique-versus-repeat metrics,sibling isolation,balanced mixed sets,unchanged Daily sets and Dashboard reload/mobile overflow. Unit selection tests are part of npm test.

@@ -26,7 +26,8 @@
     "test:report": "node --test --test-isolation=none tests/unit/report-model.test.js",
     "test:report:ui": "node scripts/qa/report.js",
     "check:report:pdf": "python scripts/validate/report-pdfs.py",
-    "test:analytics:ui": "node scripts/qa/analytics.js"
+    "test:analytics:ui": "node scripts/qa/analytics.js",
+    "test:selection:ui": "node scripts/qa/question-selection.js"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^6.0.0",

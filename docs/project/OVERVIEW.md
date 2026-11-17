@@ -7,3 +7,8 @@ The full scope remains research, original English/Mathematics/Science and releva
 The MVP supports private comments through Firebase Console admin access and local PDF/JSON exports. It is available for community trials while educator moderation, official-format verification, recoverable accounts, cloud backups/retention and broader readiness work remain open.
 
 Start with [README](../../README.md), [full specification](../../full_prompt.md), [roadmap](../../Task.md) and [documentation index](../README.md).
+
+
+## Learning engine update -17 November2026
+
+Non-Daily sets now use owner/learner completed history to prioritise unseen IDs,include a limited due-error review share after24hours,and balance subjects/Levels where candidate capacity permits. Small filtered banks use an explicitly disclosed oldest-first fallback. Daily sets stay shared and date-based. Dashboard and PDF focus require3 unique IDs and latest outcomes; first-encounter versus repeat accuracy is separate from unchanged all-answer subject statistics and equal-attempt quiz means. Historic records and bank content are unchanged. See docs/features/LEARNING_ENGINE.md from the repository root for exact scheduling priorities,denominators,limits and acceptance evidence. This supersedes earlier uniform-random selection and repeated-answer topic qualification; it is not AI generation,official examination structure or validated adaptive assessment.

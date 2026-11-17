@@ -116,3 +116,19 @@ Consent status follow-up:fixed the modal current-choice label remaining Belum di
 
 
 First-visit popup follow-up:existing mocked Analytics browser suite passed the automatic initial popup,zero pre-consent imports,Nanti dismissal with no consent,re-prompt after reload when undecided,Tolak save/no re-prompt,allow directly from popup and no re-prompt after saved allow. Existing filtering,withdrawal and cross-tab checks also passed.17 unit checks passed. The first added final reload assertion initially retained the synthetic session route,so the home-hero assertion timed out; reset the test route and reran successfully.390px first-visit screenshot reviewed in OS temp igcse-analytics-0Utluc/first-visit-popup.png. This is browser emulation with mocked Analytics,not GA4 ingestion or physical Android evidence.
+
+
+## Learning-engine upgrade -17 November2026
+
+26/26 unit tests passed,including9 new tests for unseen priority,due versus recent errors,latest-correction removal,learner isolation,subject/Level balance,capacity redistribution/oldest fallback,unique/repeat/blank denominators,minimum-unique topic evidence and empty states.300-question content validation passed without changing the bank. An initial floating-point assertion was corrected to use a tolerance.
+
+The demo-emulator selection browser suite passed:3 due+7 unseen after a backdated10-item blank attempt;17 unique IDs and3 repeats after the next saved attempt;7 first-encounter correct and100% repeat accuracy;10 blanks;no sibling history leakage;mixed12-item4/4/4 subject counts;unchanged shared Daily sets;Dashboard reload and390px no horizontal overflow. Desktop/mobile screenshots were reviewed in OS temp igcse-selection-r835rI. Setup initially lacked a running static server; early fixture navigation also needed a profile-bootstrap reload. Browser validation exposed an encoded separator issue in new UI text; fixed it and the test assertion,then reran successfully. Failed disposable-emulator runs may retain synthetic fixtures; no real learner/cloud data was read or changed. Host browser structured access remained unavailable,so existing isolated Playwright QA was used. Emulation does not prove physical Android behavior.
+
+Existing quiz-review browser regression passed:gold flags,Next/Back/refresh,first checked answer,10 flags/one blank,visible offline error,retry saves one90% attempt,and mobile checks. PDF/JSON browser regression passed including learner isolation,font retry,mobile downloads,empty/multilingual/long-name/120-attempt reports. PDF structure/bounds checks passed:two-page standard/mobile,one-page empty and nine-page stress reports;updated focus explanation rendered and visually reviewed.
+
+No new collection,Firestore rule/index,Authentication setting,Analytics event or privileged credential is introduced. Each non-Daily start now reads that learner's completed history;large-history cost/scaling remains open. Scheduling defaults are product choices,not scientifically calibrated assessments or official admission procedures.
+
+
+Hosting-only publication completed successfully. HTTP SHA-256 checks confirmed question-selection.js,quiz-engine.js,api.js,app.js and report.js exactly match the tested local source. Content/current-doc/staged-repository checks passed;the immutable provenance checksums remain intact. No production learner writes were used for deployment verification. Companion docs,Task.md and the synthetic PDF example were updated.
+
+Separate Analytics follow-up:owner-authorised read-only Console Home inspection on17 November2026 showed populated usage metrics and a populated realtime card,confirming actual GA4 ingestion beyond prior intercepted transport tests. Private aggregate counts/screenshots were not committed. Property privacy settings were not changed or independently reverified.

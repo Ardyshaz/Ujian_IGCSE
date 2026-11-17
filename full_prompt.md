@@ -1698,3 +1698,8 @@ The user authorised GA4 integration for the linked kuiz-igcse property. It super
 ### First-visit Analytics consent popup (16 November2026)
 
 The owner requests a concise BM popup on the initial page load when the production host is enabled and no valid Analytics choice exists. Show Izinkan analitik penggunaan? after initial route rendering,with equally styled Izinkan Analitik and Tolak actions plus Nanti and normal close/Escape/backdrop dismissal. Keep full privacy disclosure expandable. Save explicit choices for180days and suppress subsequent prompts while valid. Closing/Nanti grants nothing; learning stays usable and a later load may ask again. Preserve zero Analytics imports before explicit allow,footer settings and all private-field filtering. This replaces the earlier no-automatic-modal design only; it does not introduce default consent.
+
+
+## Learning engine update -17 November2026
+
+Non-Daily sets now use owner/learner completed history to prioritise unseen IDs,include a limited due-error review share after24hours,and balance subjects/Levels where candidate capacity permits. Small filtered banks use an explicitly disclosed oldest-first fallback. Daily sets stay shared and date-based. Dashboard and PDF focus require3 unique IDs and latest outcomes; first-encounter versus repeat accuracy is separate from unchanged all-answer subject statistics and equal-attempt quiz means. Historic records and bank content are unchanged. See docs/features/LEARNING_ENGINE.md from the repository root for exact scheduling priorities,denominators,limits and acceptance evidence. This supersedes earlier uniform-random selection and repeated-answer topic qualification; it is not AI generation,official examination structure or validated adaptive assessment.

@@ -58,9 +58,18 @@ Express routes, SQL schema/entities, SQLite migration/backup, server-side score/
 - [x] Five policy unit checks and mocked browser privacy/withdrawal/mobile checks pass; learning works with tracking off.
 - [x] Owner confirms Enhanced Measurement OFF; enable production opt-in after privacy verification and real-SDK intercepted transport checks.
 - [x] Hosting release verified on production at390px: zero Analytics imports before consent,explicit allow loads SDK,decline works,no page errors; collection requests intercepted and synthetic Auth identity deleted.
-- [ ] Confirm actual GA4 Realtime receipt after explicit test opt-in; intercepted transport does not prove ingestion.
+- [x] Confirm actual GA4 receipt through the owner-authorised Console Home and realtime card on17 November2026; no private report data committed.
 - [ ] Review remaining property settings including Google signals OFF, retention and admin access; client signals/ads are already disabled.
 
 - [x] Fix stale Analytics modal choice label after allow/deny; verify both labels in existing browser QA.
 
 - [x] Add requested first-visit Analytics popup with allow/decline/Nanti,expandable disclosure and saved-choice suppression; keep tracking off before explicit allow.
+
+
+## Learning engine -17 November2026
+
+- [x] Implement learner-history-aware unseen/due-error selection,24-hour review gap with limited-bank fallback,and subject/Level balancing.
+- [x] Add unique/first/repeated evidence and all-answer correct/wrong/blank counts; require3 unique IDs for Dashboard/PDF focus.
+- [x] Preserve Daily sets,immutable snapshots,scoring,review flags,ownership and unchanged300-question bank.
+- [x] Integrated selection,quiz-review and PDF/JSON browser regressions passed;content/docs/repo checks passed;Hosting deployed and five changed JS modules verified byte-for-byte against tested source.
+- [ ] Calibrate difficulty and scheduling defaults with teacher/learner review; scale history queries as data grows.

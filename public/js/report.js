@@ -124,7 +124,7 @@ export async function createStudentReport(data,{generatedAt=new Date(),sample=fa
   else if(weak.length)paragraph(`Utamakan ${weak.map(t=>`${t.name} (${SUBJECTS[t.subject_id]})`).join(' dan ')}. Semak penerangan, ulang konsep asas dan cuba set latihan baharu.`);
   else paragraph('Teruskan latihan dalam pelbagai topik. Jika rekod masih sedikit, tambah beberapa cubaan sebelum membuat kesimpulan tentang kekuatan atau kelemahan.');
   if(strong.length)paragraph(`Kekuatan semasa: ${strong.map(t=>`${t.name} (${SUBJECTS[t.subject_id]})`).join(' dan ')}. Kekalkan latihan berkala.`,{size:8.5});
-  paragraph('Cadangan fokus memerlukan sekurang-kurangnya 3 soalan direkodkan bagi sesuatu topik. Ini ialah petunjuk latihan dalaman, bukan gred rasmi atau ramalan kemasukan MRSM.',{size:7.8,color:MUTED});
+  paragraph('Cadangan fokus memerlukan sekurang-kurangnya 3 soalan unik bagi sesuatu topik, menggunakan jawapan terkini setiap soalan. Pecahan topik dan subjek merangkumi semua jawapan termasuk ulangan. Ini ialah petunjuk latihan dalaman, bukan gred rasmi atau ramalan kemasukan MRSM.',{size:7.8,color:MUTED});
 
   if(results.length){
     newPage();heading('Rekod latihan');paragraph(`Tempoh: ${model.period}`,{size:8.5,color:MUTED});
