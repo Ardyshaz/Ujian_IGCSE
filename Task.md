@@ -1,5 +1,16 @@
 # Implementation roadmap
 
+## Sambungan selepas audit 18 November 2026
+
+Laporan terperinci disimpan di [Audit UI UX workflow dan engine ujian](docs/testing/APP_AUDIT_2026-11-18.md). Pemilik meminta simpan dan sambung kemudian; item berikut belum dilaksanakan. Laporan ialah backlog cadangan, bukan pengganti full_prompt.md atau kelulusan redesign/perubahan seni bina.
+
+- [ ] Fasa1: A01/A02 — autosave jawapan ditaip dan penghantaran ketika deadline; kekalkan firstAnswer, immutable attempt ID dan retry.
+- [ ] Fasa2: A03–A07 — asingkan Dashboard daripada route kandungan/draf, betulkan skip link, kiraan Challenge, status dijawab dan teks UI lama.
+- [ ] Fasa3: susunan Home/Sambung kuiz, feedback kekal, tetapan ringkas, fokus/aksesibiliti dan audit telefon sebenar.
+- [ ] Fasa4: perluaskan kedalaman soalan/format, parser teks/nombor, review berperingkat, semakan guru dan fairness ranking mingguan.
+- [ ] Fasa5: recovery penjaga/cross-device, backup/restore, retention, pagination/cache, kos dan abuse controls.
+- [ ] Lengkapkan audit visual baharu apabila browser host tersedia atau tab khusus mendapat authorization yang sesuai; jangan anggap permintaan izin tertangguh sebagai kelulusan.
+
 Authority:[full_prompt.md](full_prompt.md). Live:https://kuiz-igcse.web.app. Repo:https://github.com/Ardyshaz/Ujian_IGCSE. Status reflects the published Firebase MVP and remaining original scope; checked items are not claims of complete production or educational readiness.
 
 ## Implemented and verified

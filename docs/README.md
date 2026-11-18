@@ -11,7 +11,7 @@
 | Features | [Visitor/session counter](features/VISITOR_COUNTER.md), [Community/profile editing](features/COMMUNITY_AND_PROFILES.md), [Dashboard/glossary](features/DASHBOARD_GLOSSARY.md), [Learning engine](features/LEARNING_ENGINE.md), [Optional Analytics - gated](features/ANALYTICS.md), [Private feedback administration](features/FEEDBACK_ADMIN.md), [PDF export](features/REPORT_EXPORT.md), [synthetic report example](examples/Contoh-Laporan-Prestasi.pdf) |
 | Content | [Question authoring](content/QUESTION_BANK_GUIDELINES.md), [review evidence/limits](content/QUESTION_BANK_REVIEW.md) |
 | Research | [Methodology](research/METHODOLOGY.md), [research index](research/README.md) |
-| Testing | [Commands/environment](testing/README.md), [executed validation history](testing/VALIDATION.md) |
+| Testing | [Commands/environment](testing/README.md), [executed validation history](testing/VALIDATION.md), [UI UX and quiz-engine audit 18 Nov 2026](testing/APP_AUDIT_2026-11-18.md) |
 | Provenance | [Archive index](archive/README.md), [original1370-line prompt](archive/prompts/full_prompt_original.md), [requirements inventory/comparison](archive/REQUIREMENTS_COMPARISON.md), [original prototype](archive/prototype/igcse_prep_quiz.html) |
 
 Private source files and obsolete implementation snapshots are retained locally under .local and are intentionally absent from this public repository. Historical source paths in the comparison report identify the earlier layout; they do not define the active runtime.
