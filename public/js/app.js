@@ -1,3 +1,4 @@
+import {trafficMarkup,initTrafficCounters,refreshTrafficCounters} from './traffic.js';
 import {PROFILE_YEARS,PROFILE_STATES} from './profile-fields.js';
 import {hallPlaceholder,mountHall,setHallCategory,showHallDetail,showHallSettings} from './hall-of-fame.js';
 import {showProfileEditor} from './profile-editor.js';
@@ -50,7 +51,7 @@ async function renderRoute() {
   try {
     stats=learner?await api(`/dashboard/${learner.id}`):null;
     if(version!==routeVersion)return;
-    if(route==='home'){main().innerHTML=home();void mountHall();}
+    if(route==='home'){main().innerHTML=home();void mountHall();void refreshTrafficCounters();}
     else if(route==='quiz')await quizSetup();
     else if(route==='bank')await questionBank();
     else if(route==='progress')main().innerHTML=progress();
@@ -69,6 +70,7 @@ function subjectRows(){return boot.subjects.map(s=>`<button class="subject-row" 
 function home() {
   return `${boot.cloudError?`<div class="alert warning" role="status">${h(boot.cloudError)}</div>`:''}<h1>Persediaan ke MRSM IGCSE bermula di sini.</h1><p class="subtitle">${learner?`Selamat kembali, ${h(learner.display_name)}. `:''}Bina keyakinan anak anda, satu soalan pada satu masa.</p>
   <section class="hero"><div><h2>Pilih Subjek Anda</h2><p>Pilih subjek di bawah untuk mula buat latihan dan ulang kaji.</p></div><button class="button" data-action="start">Mula Ulang Kaji ${icon('arrow-right')}</button></section>
+  ${trafficMarkup()}
   ${analyticsChoiceMarkup()}
   ${glossaryCallout()}
   ${hallPlaceholder()}
@@ -320,4 +322,4 @@ window.addEventListener('hall-updated',()=>{if(document.querySelector('#communit
 window.addEventListener('analytics-choice-changed',()=>document.querySelector('.analytics-choice')?.remove());
 window.addEventListener('hashchange',()=>{index=0;renderRoute();});
 window.addEventListener('beforeunload',event=>{if(pendingSaves.size){event.preventDefault();event.returnValue='';}});
-bootstrap().then(async()=>{await renderRoute();promptOptionalAnalytics();}).catch(error=>{app.innerHTML=`<main class="content error-page"><h1>Ruang pembelajaran belum dapat dihubungkan.</h1><p>${h(error.message)}</p><p>Semak config Firebase dan sambungan Internet, kemudian muat semula.</p><button class="button" id="reconnect">Muat semula</button></main>`;document.querySelector('#reconnect').addEventListener('click',()=>location.reload());});
+bootstrap().then(async()=>{await renderRoute();initTrafficCounters();promptOptionalAnalytics();}).catch(error=>{app.innerHTML=`<main class="content error-page"><h1>Ruang pembelajaran belum dapat dihubungkan.</h1><p>${h(error.message)}</p><p>Semak config Firebase dan sambungan Internet, kemudian muat semula.</p><button class="button" id="reconnect">Muat semula</button></main>`;document.querySelector('#reconnect').addEventListener('click',()=>location.reload());});

@@ -38,3 +38,8 @@ Official references checked16 November2026:
 - https://support.google.com/analytics/answer/14009635
 
 See [privacy](../operations/PRIVACY_AND_SECURITY.md),[validation](../testing/VALIDATION.md) and [roadmap](../../Task.md).
+
+
+## Visitor counter addition -18 November2026
+
+The owner authorised a compact strip immediately below the Home hero: Aktif sekarang counts sessions active within5minutes; Jumlah kunjungan counts sessions since installation, with a new session only after30minutes of inactivity for the same Anonymous browser identity. Refresh and concurrent tabs share the private pointer and do not inflate the total. Reports require fresh visible activity; idle tabs do not send perpetual heartbeats. Public timestamp-only receipts and a cumulative total use strict atomic Firestore rules; Anonymous-to-session mapping stays private. This first-party Firebase counter is separate from guardian-opt-in Google Analytics, which remains default off. The privacy UI discloses the distinction. Counts are approximate sessions,not unique people,bot-proof audience figures or retroactive visits. No receipt TTL/purge is configured;24-hour public read access is not deletion. See docs/features/VISITOR_COUNTER.md from the repository root for schema,acceptance,privacy,retention and scaling limits. This narrowly extends earlier no-public-usage-aggregate statements without exposing learner data.

@@ -104,3 +104,13 @@ Express routes, SQL schema/entities, SQLite migration/backup, server-side score/
 - [x] Add5 global per-category Top5 indexes;test beyond30 public entries.
 - [x]37 unit tests and113 rules assertions pass;automatic Hall,quiz,Dashboard/glossary and Analytics browser regressions pass;5 indexes confirmed READY;rules/Hosting deployed;6 assets and5 indexed public queries verified read-only,with4 private collection queries denied. Updated documentation/source included in release commit.
 - [ ] Consider a separately approved trusted backend if independently verified public assessments are needed;current summaries remain self-reported practice.
+
+
+## Home visitor counter -18 November2026
+
+- [x] Add compact Home strip,explanation,loading/error/stale states and responsive wrapping.
+- [x] Add atomic session/total transaction,private owner mapping,activity-only heartbeats and aggregation reads.
+- [x] Preserve explicit Google Analytics opt-in;disclose the independent Firebase counter.
+- [x]39 unit tests,24 additional traffic rules checks and demo Chrome refresh/tab/concurrency/expiry/error/layout QA pass.
+- [x] Release checks pass;rules/Hosting deployed;six asset hashes match;public counter reads succeed and private-owner/student/attempt queries deny unauthenticated access. Documentation/source included in release commit.
+- [ ] Select operational timestamp retention/purge,monitor cost/contention and consider App Check/abuse controls before growth.

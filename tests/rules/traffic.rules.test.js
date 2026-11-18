@@ -1,0 +1,40 @@
+import {readFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import {initializeTestEnvironment,assertSucceeds,assertFails} from '@firebase/rules-unit-testing';
+import {doc,setDoc,updateDoc,getDoc,getDocs,getCountFromServer,collection,query,where,deleteDoc,writeBatch,serverTimestamp,Timestamp} from 'firebase/firestore';
+const env=await initializeTestEnvironment({projectId:'demo-kuiz-igcse',firestore:{host:'127.0.0.1',port:8080,rules:await readFile('firestore.rules','utf8')}});
+const a=env.authenticatedContext('traffic-a').firestore(),b=env.authenticatedContext('traffic-b').firestore(),guest=env.unauthenticatedContext().firestore();
+const ids=['11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222','33333333-3333-4333-8333-333333333333','44444444-4444-4444-8444-444444444444'];
+let checks=0;const ok=async p=>{checks++;return assertSucceeds(p);},no=async p=>{checks++;await assertFails(p);};
+async function visit(db,uid,id,total,createdAt,startedAt){const batch=writeBatch(db);batch.set(doc(db,'trafficOwners',uid),{sessionId:id,createdAt:createdAt||serverTimestamp()});batch.set(doc(db,'trafficSessions',id),{createdAt:serverTimestamp(),lastSeen:serverTimestamp()});batch.set(doc(db,'trafficStats','summary'),{total,startedAt:startedAt||serverTimestamp(),updatedAt:serverTimestamp()});return batch.commit();}
+const active=db=>query(collection(db,'trafficSessions'),where('lastSeen','>=',Timestamp.fromMillis(Date.now()-300000)));
+try{
+ await env.clearFirestore();
+ await no(visit(guest,'traffic-a',ids[0],1));
+ await ok(visit(a,'traffic-a',ids[0],1));
+ const summary=(await getDoc(doc(guest,'trafficStats','summary'))).data(),pointer=(await getDoc(doc(a,'trafficOwners','traffic-a'))).data();
+ assert.equal(summary.total,1);
+ await ok(getDoc(doc(guest,'trafficStats','summary')));
+ await ok(getCountFromServer(active(guest)));assert.equal((await getCountFromServer(active(guest))).data().count,1);
+ await no(getDocs(collection(guest,'trafficOwners')));await no(getDoc(doc(b,'trafficOwners','traffic-a')));await no(getDoc(doc(guest,'trafficOwners','traffic-a')));
+ await no(setDoc(doc(a,'trafficSessions',ids[1]),{createdAt:serverTimestamp(),lastSeen:serverTimestamp()}));
+ await no(setDoc(doc(a,'trafficOwners','traffic-a'),{sessionId:ids[1],createdAt:pointer.createdAt}));
+ await no(updateDoc(doc(a,'trafficStats','summary'),{total:2,updatedAt:serverTimestamp()}));
+ await no(visit(a,'traffic-a',ids[1],2,pointer.createdAt,summary.startedAt));
+ await no(updateDoc(doc(a,'trafficSessions',ids[0]),{lastSeen:serverTimestamp()}));
+ await no(updateDoc(doc(b,'trafficSessions',ids[0]),{lastSeen:serverTimestamp()}));
+ await no(updateDoc(doc(a,'trafficSessions',ids[0]),{studentId:'PRIVATE'}));
+ await no(updateDoc(doc(a,'trafficStats','summary'),{total:0}));
+ await no(deleteDoc(doc(a,'trafficStats','summary')));await no(deleteDoc(doc(a,'trafficSessions',ids[0])));await no(deleteDoc(doc(a,'trafficOwners','traffic-a')));
+ await no(getDocs(collection(guest,'trafficSessions')));
+ await ok(visit(b,'traffic-b',ids[1],2,undefined,summary.startedAt));
+ await env.withSecurityRulesDisabled(async admin=>{const db=admin.firestore();await setDoc(doc(db,'trafficSessions',ids[0]),{createdAt:Timestamp.fromMillis(Date.now()-32*60000),lastSeen:Timestamp.fromMillis(Date.now()-31*60000)});});
+ assert.equal((await getCountFromServer(active(guest))).data().count,1);assert.equal((await getDoc(doc(guest,'trafficStats','summary'))).data().total,2);
+ await ok(visit(a,'traffic-a',ids[2],3,pointer.createdAt,summary.startedAt));
+ assert.equal((await getCountFromServer(active(guest))).data().count,2);assert.equal((await getDoc(doc(guest,'trafficStats','summary'))).data().total,3);
+ await no(updateDoc(doc(a,'trafficSessions',ids[0]),{lastSeen:serverTimestamp()}));
+ await env.withSecurityRulesDisabled(async admin=>{const db=admin.firestore();await setDoc(doc(db,'trafficSessions',ids[3]),{createdAt:Timestamp.fromMillis(Date.now()-26*3600000),lastSeen:Timestamp.fromMillis(Date.now()-25*3600000)});});
+ await no(getDoc(doc(guest,'trafficSessions',ids[3])));
+ await no(visit(a,'traffic-a',ids[3],4,pointer.createdAt,summary.startedAt));
+ console.log(`PASS: ${checks} traffic security checks plus active/total assertions:atomic count-once,cooldown,private owner mapping,minimal timestamps,active expiry and monotonic totals.`);
+}finally{await env.cleanup();}

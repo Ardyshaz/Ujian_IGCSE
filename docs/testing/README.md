@@ -46,3 +46,6 @@ npm run test:hall:ui exercises synthetic profile editing/enrollment,the actual e
 
 
 Automatic v2 Hall QA now exercises no-checkbox sync,opaque aliases,Top5 with35 extra synthetic public projections,persistent hide/resume and private-profile editing/deletion. Legacy39 Hall rules checks remain for compatibility;the new automatic suite adds20 schema/ownership/visibility checks. All rules suites clear only the demo database and should precede browser tests.
+
+
+`npm run test:traffic:ui` resets only the local demo Firestore database and tests the Home session counter in isolated Chrome. Run sequentially with other emulator suites. It covers refresh/tabs/concurrency,independent browsers,backdated active/session expiry,minimal public timestamps,error fallback and360/390/1440 widths. No production writes or physical Android claims.

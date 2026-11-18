@@ -93,3 +93,6 @@ Dashboard kini menonjolkan Istilah Hari Ini dan prestasi mengikut mod. Glosari m
 
 
 Edit profil kini tersedia di bawah Profil keluarga untuk nama,tahap,sekolah dan negeri pilihan. Wall Of Excellence Minggu Ini di Home memaparkan alias rawak dan ringkasan latihan kendiri secara automatik apabila profil digunakan. Tiada checkbox penjaga atau kemas kini admin diperlukan. Nama sebenar,sekolah dan negeri tidak dipaparkan;paparan boleh disembunyikan. Ranking ini bukan penilaian yang disahkan. [Panduan ciri dan operasi](docs/features/COMMUNITY_AND_PROFILES.md).
+
+
+The Home page includes Aktif sekarang (active sessions within5minutes) and Jumlah kunjungan (sessions since installation,renewed after30minutes of inactivity). Refresh and shared browser tabs are deduplicated; these are approximate sessions,not unique people. The minimal Firebase counter is independent of optional Google Analytics. See [counter details and privacy limits](docs/features/VISITOR_COUNTER.md).

@@ -30,7 +30,8 @@
     "test:selection:ui": "node scripts/qa/question-selection.js",
     "test:hall:ui": "node scripts/qa/hall-profile.js",
     "hall:preview": "node scripts/operations/publish-hall.js",
-    "hall:publish": "node scripts/operations/publish-hall.js --publish"
+    "hall:publish": "node scripts/operations/publish-hall.js --publish",
+    "test:traffic:ui": "node scripts/qa/traffic.js"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^6.0.0",

@@ -166,12 +166,60 @@ service cloud.firestore {
     && !existsAfter(/databases/$(database)/documents/hallEntries/$(publicId));
   }
   match /hallEntries/{publicId} {
-   // Only curated, consented aggregate fields are published by CLI IAM, never raw learner records.
+   // Strict random-alias practice summaries; private learner records are never published.
    allow get: if true;
    allow list: if request.query.limit != null && request.query.limit <= 30;
    allow create, update: if validHallEntry(request.resource.data,publicId);
    allow delete: if signedIn()
     && get(/databases/$(database)/documents/hallOwners/$(publicId)).data.ownerId == request.auth.uid;
+  }
+  function trafficNewSession(id) {
+   let pointer = /databases/$(database)/documents/trafficOwners/$(request.auth.uid);
+   return !exists(pointer)
+    || (!exists(/databases/$(database)/documents/trafficSessions/$(get(pointer).data.sessionId)))
+    || (get(pointer).data.sessionId != id
+        && request.time >= get(/databases/$(database)/documents/trafficSessions/$(get(pointer).data.sessionId)).data.lastSeen + duration.value(30,'m'));
+  }
+  function trafficIncremented() {
+   let stats = /databases/$(database)/documents/trafficStats/summary;
+   return getAfter(stats).data.updatedAt == request.time
+    && getAfter(stats).data.total == (exists(stats) ? get(stats).data.total + 1 : 1);
+  }
+  match /trafficOwners/{uid} {
+   allow get: if signedIn() && request.auth.uid == uid;
+   allow list,delete: if false;
+   allow create,update: if signedIn() && request.auth.uid == uid
+    && request.resource.data.keys().hasAll(['sessionId','createdAt']) && request.resource.data.keys().hasOnly(['sessionId','createdAt'])
+    && request.resource.data.sessionId is string && request.resource.data.sessionId.matches('^[a-f0-9-]{36}$')
+    && (!exists(/databases/$(database)/documents/trafficOwners/$(uid)) ? request.resource.data.createdAt == request.time : request.resource.data.createdAt == resource.data.createdAt)
+    && trafficNewSession(request.resource.data.sessionId) && trafficIncremented()
+    && getAfter(/databases/$(database)/documents/trafficSessions/$(request.resource.data.sessionId)).data.createdAt == request.time;
+  }
+  match /trafficSessions/{sessionId} {
+   // Public recent timestamps only; the browser/owner link remains private.
+   allow get: if (signedIn() && get(/databases/$(database)/documents/trafficOwners/$(request.auth.uid)).data.sessionId == sessionId)
+    || resource.data.lastSeen >= request.time - duration.value(24,'h');
+   allow list: if resource.data.lastSeen >= request.time - duration.value(24,'h');
+   allow create: if signedIn() && trafficNewSession(sessionId) && trafficIncremented()
+    && request.resource.data.keys().hasAll(['createdAt','lastSeen']) && request.resource.data.keys().hasOnly(['createdAt','lastSeen'])
+    && request.resource.data.createdAt == request.time && request.resource.data.lastSeen == request.time
+    && getAfter(/databases/$(database)/documents/trafficOwners/$(request.auth.uid)).data.sessionId == sessionId;
+   allow update: if signedIn() && get(/databases/$(database)/documents/trafficOwners/$(request.auth.uid)).data.sessionId == sessionId
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastSeen'])
+    && request.resource.data.lastSeen == request.time
+    && request.time >= resource.data.lastSeen + duration.value(30,'s');
+   allow delete: if false;
+  }
+  match /trafficStats/{statsId} {
+   allow get: if statsId == 'summary';
+   allow list,delete: if false;
+   allow create,update: if statsId == 'summary' && signedIn()
+    && request.resource.data.keys().hasAll(['total','startedAt','updatedAt']) && request.resource.data.keys().hasOnly(['total','startedAt','updatedAt'])
+    && request.resource.data.total is int && trafficIncremented()
+    && request.resource.data.updatedAt == request.time
+    && (!exists(/databases/$(database)/documents/trafficStats/summary) ? request.resource.data.startedAt == request.time : request.resource.data.startedAt == resource.data.startedAt)
+    && !exists(/databases/$(database)/documents/trafficSessions/$(getAfter(/databases/$(database)/documents/trafficOwners/$(request.auth.uid)).data.sessionId))
+    && getAfter(/databases/$(database)/documents/trafficSessions/$(getAfter(/databases/$(database)/documents/trafficOwners/$(request.auth.uid)).data.sessionId)).data.createdAt == request.time;
   }
   match /{document=**} { allow read,write: if false; }
  }
