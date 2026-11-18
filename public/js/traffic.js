@@ -1,7 +1,7 @@
 import {recordTrafficActivity,readTrafficCounters} from './traffic-service.js';
 import {freshTrafficActivity,HEARTBEAT_MS} from './traffic-policy.js';
 let initialized=false,activity=0,reported=0,busy=false,reading=false,queued=false,values=null,failed=false;
-export function trafficMarkup(){return `<section class="traffic-strip" aria-label="Statistik kunjungan"><span><i class="traffic-dot" aria-hidden="true"></i>Aktif sekarang: <strong data-traffic-active>...</strong> sesi</span><span>Jumlah kunjungan: <strong data-traffic-total>...</strong></span><details><summary>Cara kiraan</summary><p>Anggaran sesi dengan aktiviti dalam 5 minit terakhir. Refresh dan tab pelayar yang sama dalam sesi semasa tidak menambah kunjungan; sesi baharu bermula selepas 30 minit tanpa aktiviti. Jumlah dikira sejak counter dipasang, bukan bilangan individu unik. Pengiraan Firebase ini berasingan daripada Google Analytics; tiada nama atau rekod pelajar dikongsi.</p></details><small data-traffic-status role="status"></small></section>`;}
+export function trafficMarkup(){return `<section class="traffic-strip" aria-label="Statistik kunjungan"><span><i class="traffic-dot" aria-hidden="true"></i>Aktif sekarang: <strong data-traffic-active>...</strong> sesi</span><span>Jumlah kunjungan: <strong data-traffic-total>...</strong></span><small data-traffic-status role="status"></small></section>`;}
 function paint(){
  const active=document.querySelector('[data-traffic-active]'),total=document.querySelector('[data-traffic-total]'),status=document.querySelector('[data-traffic-status]');
  if(!active||!total)return;

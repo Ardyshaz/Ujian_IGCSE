@@ -23,7 +23,7 @@ try{
  await p.goto(base);await count(p,1);assert.match(await p.title(),/MRSM/);await p.locator('.hero').waitFor();
  assert.equal(await p.locator('[data-traffic-active]').textContent(),'1');
  assert.equal(await p.locator('.hero + .traffic-strip').count(),1);
- await p.locator('.traffic-strip summary').click();await p.getByText(/Jumlah dikira sejak counter dipasang/).waitFor();
+ assert.equal(await p.locator('.traffic-strip details').count(),0);
  assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await p.screenshot({path:join(output,'mobile-390.png'),fullPage:false});
  await p.reload();await count(p,1);

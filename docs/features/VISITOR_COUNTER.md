@@ -7,7 +7,7 @@ Decision:18 November2026. The owner requested a compact public usage counter. It
 - **Aktif sekarang: n sesi**: sessions whose last recorded activity falls within five minutes. Pointer, keyboard, scroll, focus and returning to a visible tab count as activity. An open but idle tab does not send perpetual presence heartbeats.
 - **Jumlah kunjungan: n**: cumulative sessions since this feature was installed. The first visit starts a session; the same Anonymous browser identity starts another only after30minutes without recorded activity. Refresh, routes and concurrent tabs sharing that identity do not increment it again.
 - Reads refresh approximately once per minute while Home is visible, and on returning Home. Activity reports are at most once per minute per tab; server rules require at least30seconds between accepted heartbeats. Initial activity is recorded after app bootstrap.
-- Cara kiraan explains the time windows, session denominator, start date and separation from GA. An unavailable read shows -- rather than a fabricated zero. Previously loaded values may remain with an explicit stale warning.
+- The Home strip displays only the two counters; the owner removed Cara kiraan and its explanatory block on18 November2026. Definitions remain in this document and the independent Firebase-counter disclosure remains in Analytics privacy settings. An unavailable read shows -- rather than a fabricated zero. Previously loaded values may remain with an explicit stale warning.
 - No retroactive visits are inferred from learner profiles, attempts or Analytics. A fresh installation can honestly start at zero until its first real visit.
 
 ## Data and atomic contract

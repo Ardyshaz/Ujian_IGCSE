@@ -114,3 +114,6 @@ Express routes, SQL schema/entities, SQLite migration/backup, server-side score/
 - [x]39 unit tests,24 additional traffic rules checks and demo Chrome refresh/tab/concurrency/expiry/error/layout QA pass.
 - [x] Release checks pass;rules/Hosting deployed;six asset hashes match;public counter reads succeed and private-owner/student/attempt queries deny unauthenticated access. Documentation/source included in release commit.
 - [ ] Select operational timestamp retention/purge,monitor cost/contention and consider App Check/abuse controls before growth.
+
+
+- [x] Remove Cara kiraan and its explanatory paragraph from Home;retain both counters and the existing counting behavior. Update the obsolete Analytics privacy reference and counter documentation.
